@@ -1,7 +1,10 @@
 import { createContext, useState, useEffect, useMemo } from "react";
+import PropTypes from 'prop-types';
 
 export const AuthContext = createContext();
-
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");

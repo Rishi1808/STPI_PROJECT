@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -20,9 +20,9 @@ const IncubationForm = () => {
   const onSubmit = (data, e) => {
     //validationSchema: validationSchema,
     e.preventDefault();
-    setFormData(data);
+    setFormData(formData(data));
    // setShowPreview(true);  // Show Preview Component after submission
-    console.log("Form Data:", data);
+    console.log("Form Data:", formData);
   };
 
   const [authLetterFile, setAuthLetterFile] = useState(false);

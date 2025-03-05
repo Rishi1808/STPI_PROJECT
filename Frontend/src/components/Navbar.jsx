@@ -1,10 +1,11 @@
 import { useState, useContext } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -27,14 +28,36 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-6">
+        <ul className="hidden md:flex items-center space-x-6">
           {menuItems.map((item) => (
-            <li
-              key={item}
-              className="text-white hover:bg-gray-600 px-3 py-2 rounded-md cursor-pointer transition duration-200 de"
-            >
-              {item}
-            </li>
+            item === "Services" ? (
+              <li
+                key={item}
+                className="relative text-white hover:bg-gray-600 px-3 py-2 rounded-md cursor-pointer transition duration-200"
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
+                {item} <ChevronDown className="inline-block w-4 h-4 ml-1" />
+                {/* Dropdown */}
+                {isDropdownOpen && (
+                  <ul className="absolute left-0 mt-2 bg-gray-800 text-white rounded-md shadow-md w-40">
+                    <li
+                      className="p-2 hover:bg-gray-600 cursor-pointer"
+                      onClick={() => navigate("/form")}
+                    >
+                      Incubation
+                    </li>
+                  </ul>
+                )}
+              </li>
+            ) : (
+              <li
+                key={item}
+                className="text-white hover:bg-gray-600 px-3 py-2 rounded-md cursor-pointer transition duration-200"
+              >
+                {item}
+              </li>
+            )
           ))}
 
           {/* Display User Name & Logout Button */}
@@ -56,7 +79,7 @@ export default function Navbar() {
               Login
             </button>
           )}
-        </div>
+        </ul>
 
         {/* Mobile Menu Button */}
         <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
@@ -68,13 +91,37 @@ export default function Navbar() {
       {isOpen && (
         <ul className="md:hidden bg-gray-800 p-4 space-y-3 text-center">
           {menuItems.map((item) => (
-            <li
-              key={item}
-              className="text-white hover:bg-gray-600 p-2 rounded-md cursor-pointer"
-              onClick={() => setIsOpen(false)} // Close menu on click
-            >
-              {item}
-            </li>
+            item === "Services" ? (
+              <li key={item} className="text-white p-2 rounded-md cursor-pointer relative">
+                <button
+                  className="w-full flex justify-center items-center gap-2"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  {item} <ChevronDown className="w-4 h-4" />
+                </button>
+                {isDropdownOpen && (
+                  <ul className="bg-gray-700 p-2 rounded-md mt-2">
+                    <li
+                      className="p-2 hover:bg-gray-600 cursor-pointer"
+                      onClick={() => {
+                        navigate("/form");
+                        setIsOpen(false);
+                      }}
+                    >
+                      Incubation
+                    </li>
+                  </ul>
+                )}
+              </li>
+            ) : (
+              <li
+                key={item}
+                className="text-white hover:bg-gray-600 p-2 rounded-md cursor-pointer"
+                onClick={() => setIsOpen(false)}
+              >
+                {item}
+              </li>
+            )
           ))}
 
           {/* Display User Name & Logout in Mobile View */}
