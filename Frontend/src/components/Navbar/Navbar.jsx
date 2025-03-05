@@ -58,7 +58,7 @@ export default function Navbar() {
             )
           ))}
 
-          {/* User Authentication */}
+          {/* User Authentication  g  */}
           {user ? (
             <div className="flex items-center space-x-4">
               <span className="text-white font-semibold">Welcome, {user.name}</span>
