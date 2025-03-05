@@ -1,0 +1,8 @@
+.shadow-top-inset {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: inset 0px 5px 10px rgba(0, 0, 0, 0.2); 
+  }
+  
+
+  /* rgb(55,55,168) */
