@@ -14,15 +14,16 @@ connectDB();
 
 //routes
 const userRoutes=require('./routes/userRoute.js');
-
+const formRoutes=require('./routes/formRoute.js');
 //middleware -> .json()
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 
 //routes
 app.use('/api/auth', userRoutes);
-
+app.use('/api/form',fromRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
