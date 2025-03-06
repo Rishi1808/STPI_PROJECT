@@ -15,15 +15,44 @@ const IncubationForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(validationSchema)
   });
-  const [formData, setFormData] = useState(null);
+
   
-  const onSubmit = (data, e) => {
-    //validationSchema: validationSchema,
-    e.preventDefault();
-    setFormData(formData(data));
-   // setShowPreview(true);  // Show Preview Component after submission
-    console.log("Form Data:", formData);
-  };
+  // const onSubmit = (data, e) => {
+  //   //validationSchema: validationSchema,
+  //   e.preventDefault();
+  //   setFormData(formData(data));
+  //  // setShowPreview(true);  // Show Preview Component after submission
+  //   console.log("Form Data:", formData);
+  // };
+  const onSubmit = async (formData) => {
+    try {
+        const formDataObj = new FormData();
+
+        // Append all fields to FormData
+        for (const key in formData) {
+            if (key === "files") {
+                // Append multiple files
+                for (let i = 0; i < formData.files.length; i++) {
+                    formDataObj.append("files", formData.files[i]);
+                }
+            } else {
+                formDataObj.append(key, formData[key]);
+            }
+        }
+
+        const response = await fetch("http://localhost:5000/api/form/submit", {
+            method: "POST",
+            body: formDataObj, // No need for headers, browser sets it automatically
+        });
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error("Error submitting form:", error);
+    }
+};
+
+
 
   const [authLetterFile, setAuthLetterFile] = useState(false);
 

@@ -14,16 +14,23 @@ connectDB();
 
 //routes
 const userRoutes=require('./routes/userRoute.js');
-const formRoutes=require('./routes/formRoute.js');
+const formRoutes=require('./routes/formRoutes.js')
+
+ // Import upload routes
+
+
+
 //middleware -> .json()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+ // Serve uploaded files
 
 
 
 //routes
 app.use('/api/auth', userRoutes);
-app.use('/api/form',fromRoutes);
+app.use('/api/form',formRoutes);
+ // Use upload routes
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
