@@ -2,22 +2,20 @@ const Form = require("../models/Form");
 
 exports.submitForm = async (req, res) => {
   try {
-    // Extract ALL form data
-    const formData = req.body; 
+    // Extract form data from request body
+    const formData = req.body;
 
-    // Get uploaded file paths (handle if no files uploaded)
-    const files = req.files ? req.files.map((file) => file.path) : [];
+    // Get Cloudinary file URLs
+    const files = req.files.map((file) => file.path);
 
-    // Create new form entry with all fields
-    const newForm = new Form({
-      ...formData, // Spread all form data from req.body
-      uploadedFiles: files, // Save file paths in MongoDB
+    // Create new form entry
+    const form = new Form({
+      ...formData,
+      uploadedFiles: files, // Store Cloudinary URLs in MongoDB
     });
 
-    // Save to MongoDB
-    await newForm.save();
-
-    res.status(201).json({ message: "Form submitted successfully", newForm });
+    await form.save();
+    res.status(201).json({ message: "Form submitted successfully", form });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

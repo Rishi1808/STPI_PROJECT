@@ -16,42 +16,33 @@ const IncubationForm = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  
-  // const onSubmit = (data, e) => {
-  //   //validationSchema: validationSchema,
-  //   e.preventDefault();
-  //   setFormData(formData(data));
-  //  // setShowPreview(true);  // Show Preview Component after submission
-  //   console.log("Form Data:", formData);
-  // };
+ 
   const onSubmit = async (formData) => {
     try {
-        const formDataObj = new FormData();
+      const formDataObj = new FormData();
 
-        // Append all fields to FormData
-        for (const key in formData) {
-            if (key === "files") {
-                // Append multiple files
-                for (let i = 0; i < formData.files.length; i++) {
-                    formDataObj.append("files", formData.files[i]);
-                }
-            } else {
-                formDataObj.append(key, formData[key]);
-            }
+      // Append all fields to FormData
+      Object.keys(formData).forEach((key) => {
+        if (key === "files" && formData.files.length) {
+          Array.from(formData.files).forEach((file) => {
+            formDataObj.append("files", file);
+          });
+        } else {
+          formDataObj.append(key, formData[key]);
         }
+      });
 
-        const response = await fetch("http://localhost:5000/api/form/submit", {
-            method: "POST",
-            body: formDataObj, // No need for headers, browser sets it automatically
-        });
+      const response = await fetch("http://localhost:5000/api/form/submit", {
+        method: "POST",
+        body: formDataObj, // No need to set headers; FormData does it automatically
+      });
 
-        const data = await response.json();
-        console.log(data);
+      const data = await response.json();
+      console.log("Response:", data);
     } catch (error) {
-        console.error("Error submitting form:", error);
+      console.error("Error submitting form:", error);
     }
-};
-
+  };
 
 
   const [authLetterFile, setAuthLetterFile] = useState(false);
