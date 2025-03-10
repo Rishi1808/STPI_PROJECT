@@ -19,14 +19,15 @@ export default function Navbar() {
   const menuItems = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
 
   return (
-    <nav className=" shadow-md sm:h-[33vh] h-[20vh]" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover' }} >
+  <nav className=" shadow-md sm:h-[33vh] h-[20vh] flex flex-col justify-between" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover' }} >
 
 
-<div className="relative max-w-[90%] mx-auto flex justify-between items-center">
+    <div className="shadow-[inset_0_60px_30px_-15px_rgba(0,0,0,1.8)]">
   {/* Logo & Title */}
-  <div className="flex items-center">
-    <img src={logo} alt="Logo" className="w-46 h-20 object-contain" />
-  </div>
+    <div className="relative max-w-[90%] mx-auto flex justify-between items-center ">
+      <div className="flex items-center">
+      <img src={logo} alt="Logo" className="w-46 h-20 object-contain" />
+      </div>
 
   {/* Desktop Menu */}
   <ul className="hidden md:flex items-center space-x-6 font-bold">
@@ -86,7 +87,28 @@ export default function Navbar() {
   <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
     {isOpen ? <X size={28} /> : <Menu size={28} />}
   </button>
-</div>
+
+
+
+
+    </div>
+    </div>
+
+
+  <div className=" flex flex-col justify-between sm:w-[65%]  mx-auto">
+
+      <div><h1 className="text-white text-[45px] font-bold my-3">STPI Center</h1></div>
+      <hr className="border-white/40"/>
+        
+        <div className="flex gap-4">
+        
+        <div><button className="text-white my-3">CENTER </button></div>  
+        <div className="border-l-2 h-[40%] my-auto  border-gray-500"></div>      
+        <div><button className="text-white my-3">RANCHI</button></div>
+        
+      </div>
+
+  </div>
 
       {/* Mobile Menu */}
       {isOpen && (
