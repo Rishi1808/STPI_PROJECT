@@ -24,7 +24,7 @@ export default function Navbar() {
 
     <div className="shadow-[inset_0_60px_30px_-15px_rgba(0,0,0,1.8)]">
   {/* Logo & Title */}
-    <div className="relative max-w-[90%] mx-auto flex justify-between items-center ">
+    <div className="relative lg:w-[90%] w-[100%] mx-auto flex justify-between items-center ">
       <div className="flex items-center">
       <img src={logo} alt="Logo" className="w-46 h-20 object-contain" />
       </div>
