@@ -1,85 +1,136 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { toast } from "react-toastify";
 import { validationSchema } from "../schemas/Validation";
 
-
-
-
-
-
-
-
 const IncubationForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(validationSchema)
   });
 
+  // State for conditional fields
+  const [authLetterFile, setAuthLetterFile] = useState(false);
+  const [otherLoc, setOtherLoc] = useState(false);
+  const [scSt, setScSt] = useState(false);
+  const [months, setMonths] = useState(false);
+  const [years, setYears] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  // Handle file uploads with preview
+  const [fileUploads, setFileUploads] = useState({
+    authLetter: null,
+    rocCertificate: null,
+    casteCertificate: null,
+    passportPhotos: []
+  });
+
+  const handleFileChange = (e, fieldName) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFileUploads({
+        ...fileUploads,
+        [fieldName]: e.target.files[0]
+      });
+    }
+  };
+
+  const handleMultiFileChange = (e, fieldName) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFileUploads({
+        ...fileUploads,
+        [fieldName]: [...(fileUploads[fieldName] || []), ...Array.from(e.target.files)]
+      });
+    }
+  };
  
   const onSubmit = async (formData) => {
     try {
+      setLoading(true);
       const formDataObj = new FormData();
-
-      // Append all fields to FormData
+      console.log("Form Data:", formData);
+      // Append all form fields
       Object.keys(formData).forEach((key) => {
-        if (key === "files" && formData.files.length) {
-          Array.from(formData.files).forEach((file) => {
-            formDataObj.append("files", file);
-          });
-        } else {
+        // Skip file fields as we handle them separately
+        if (key !== "files" && formData[key] !== undefined && formData[key] !== null) {
           formDataObj.append(key, formData[key]);
         }
       });
 
+      // Append all files with proper field names
+      if (fileUploads.authLetter) {
+        formDataObj.append("authLetter", fileUploads.authLetter);
+      }
+      
+      if (fileUploads.rocCertificate) {
+        formDataObj.append("rocCertificate", fileUploads.rocCertificate);
+      }
+      
+      if (fileUploads.casteCertificate) {
+        formDataObj.append("casteCertificate", fileUploads.casteCertificate);
+      }
+
+      // Append passport photos
+      if (fileUploads.passportPhotos.length > 0) {
+        fileUploads.passportPhotos.forEach((photo, index) => {
+          formDataObj.append("passportPhotos", photo);
+        });
+      }
+
       const response = await fetch("http://localhost:5000/api/form/submit", {
         method: "POST",
-        body: formDataObj, // No need to set headers; FormData does it automatically
+        body: formDataObj,
       });
 
       const data = await response.json();
-      console.log("Response:", data);
+      if (response.ok) {
+        toast.success("Form submitted successfully!");
+        reset(); // Reset form after successful submission
+        setFileUploads({
+          authLetter: null,
+          rocCertificate: null,
+          casteCertificate: null,
+          passportPhotos: []
+        });
+        // Reset conditional fields
+        setAuthLetterFile(false);
+        setOtherLoc(false);
+        setScSt(false);
+        setMonths(false);
+        setYears(false);
+      } else {
+        toast.error(data.message || "Something went wrong!");
+      }
     } catch (error) {
+      toast.error("Error submitting form. Please try again.");
       console.error("Error submitting form:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-
-  const [authLetterFile, setAuthLetterFile] = useState(false);
-
-  const [otherLoc, setOtherLoc] = useState(false);
-
-
-  const [scSt, setScSt] = useState(false);
-
-  const [months, setMonths] = useState(false);
-  const [years, setYears] = useState(false);
-
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-gray-200  shadow-md rounded-lg">
+    <div className="max-w-3xl mx-auto p-6 bg-gray-200 shadow-md rounded-lg">
       <h2 className="text-lg font-semibold text-center mb-4">
         REQUEST FOR ALLOTMENT/EXTENSION OF INCUBATION SPACE
       </h2>
 
-     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Name of Unit */}
         <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
           <label className="block font-medium">Name of the Unit</label>
           <input
-
             type="text"
             {...register("unitName")}
             className="w-full border p-2 rounded"
           />
-          {errors.unitName && <span className="text-red-500">{errors.contactPerson.message}</span>}
+          {errors.unitName && <span className="text-red-500">{errors.unitName?.message}</span>}
         </div>
 
         {/* Contact Person */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
           <label className="block font-medium">
             Contact Person/Authorized Signatory for:
-            <div className="text-\
-             text-gray-600">
+            <div className="text-gray-600">
               <h3>Interaction in respect of incubation services.</h3>
             </div>
           </label>
@@ -88,10 +139,11 @@ const IncubationForm = () => {
             {...register("contactPerson", { required: true })}
             className="w-full border p-2 rounded"
           />
-          {errors.contactPerson && <span className="text-red-500">{errors.unitName.message}</span>}
+          {errors.contactPerson && <span className="text-red-500">{errors.contactPerson?.message}</span>}
         </div>
 
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
+        {/* Authorization Letter */}
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
           <label htmlFor="Auth-file">
             Please provide authorization letter duly Signed by the Proprietor/ partner or board resolution in case of Pvt. Ltd. firm
           </label>
@@ -106,47 +158,74 @@ const IncubationForm = () => {
           {authLetterFile && (
             <div>
               <label>Upload Authorization Letter:</label>
-              <input type="file" id="Auth-letter" className="border p-2 w-full" required />
+              <input 
+                type="file" 
+                id="Auth-letter" 
+                className="border p-2 w-full" 
+                onChange={(e) => handleFileChange(e, 'authLetter')}
+              />
+              {fileUploads.authLetter && (
+                <div className="text-sm text-green-600 mt-1">
+                  File selected: {fileUploads.authLetter.name}
+                </div>
+              )}
             </div>
-
           )}
         </div>
 
-
-
         {/* Registered Office Address */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
-          <label className="block font-medium">Full address of the Registered Office </label>
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
+          <label className="block font-medium">Full address of the Registered Office</label>
           <input
             type="text"
             {...register("registeredAddress", { required: true })}
             className="w-full border p-2 rounded"
           />
-          <div className=" mt-4 mb-6 ">
+          {errors.registeredAddress && (
+            <span className="text-red-500">{errors.registeredAddress?.message}</span>
+          )}
+          <div className="mt-4 mb-6">
             <label className="text-md mt-4" htmlFor="">
               (Furnish copy of the ROC/ Regn. Certificate)
-              <div className="mt-4 ">
-                <input type="file" name="" id="Roc-certificate" />
+              <div className="mt-4">
+                <input 
+                  type="file" 
+                  id="Roc-certificate"
+                  onChange={(e) => handleFileChange(e, 'rocCertificate')} 
+                />
+                {fileUploads.rocCertificate && (
+                  <div className="text-sm text-green-600 mt-1">
+                    File selected: {fileUploads.rocCertificate.name}
+                  </div>
+                )}
               </div>
-
             </label>
           </div>
         </div>
 
         {/* Branch Office Address */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
-          <label className="block font-medium">Branch Office(S) Opertaions at other location,if Any Address
-            <input className="m-4" type="checkbox" name="other-loc" onChange={(e) => setOtherLoc(e.target.checked)} />
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
+          <label className="block font-medium">
+            Branch Office(S) Operations at other location, if Any Address
+            <input 
+              className="m-4" 
+              type="checkbox" 
+              name="other-loc" 
+              onChange={(e) => setOtherLoc(e.target.checked)}
+            />
           </label>
 
-          {otherLoc &&
+          {otherLoc && (
             <input
-              required
               type="text"
               placeholder="Enter Other Location Address"
-              {...register("branchOffice")}
+              {...register("branchOffice", { required: otherLoc })}
               className="w-full border p-2 rounded"
-            />}
+            />
+          )}
+          {otherLoc && errors.branchOffice && (
+            <span className="text-red-500">{errors.branchOffice?.message}</span>
+          )}
         </div>
 
         {/* Status of Applicant */}
@@ -178,46 +257,56 @@ const IncubationForm = () => {
               Pvt. Ltd. Firm
             </label>
           </div>
-          {errors.status && <span>{errors.status.message}</span>}
+          {errors.status && <span className="text-red-500">{errors.status?.message}</span>}
         </div>
+
         {/* SC/ST, Women, Divyangjan Entrepreneurs */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
           <label className="block font-medium">Company led by</label>
           <div className="flex flex-col gap-2">
             <label>
-              <input type="checkbox" {...register("sc_st")}
+              <input
+                type="checkbox"
+                {...register("sc_st")}
                 onChange={(e) => setScSt(e.target.checked)}
               /> SC/ST Entrepreneurs
-              <div className=" text-gray-600">
-                (if yes, enclose caste certificate )
+              <div className="text-gray-600">
+                (if yes, enclose caste certificate)
               </div>
             </label>
-            {scSt &&
+            {scSt && (
               <div className="mt-2 mb-2">
-
-                <input type="file" id='scst-caste' required />
+                <input 
+                  type="file" 
+                  id="scst-caste"
+                  onChange={(e) => handleFileChange(e, 'casteCertificate')}
+                />
+                {fileUploads.casteCertificate && (
+                  <div className="text-sm text-green-600 mt-1">
+                    File selected: {fileUploads.casteCertificate.name}
+                  </div>
+                )}
               </div>
-            }
+            )}
             <label>
               <input type="checkbox" {...register("women")} /> Women Entrepreneurs
               <div className="text-gray-600">
-                ( In case of Non Individual enterprises at least 51% of the shreholding and controlling stake shpuld be held by women Entrepreneurs)
+                (In case of Non Individual enterprises at least 51% of the shareholding and controlling stake should be held by women Entrepreneurs)
               </div>
             </label>
             <label>
               <input type="checkbox" {...register("divyangjan")} /> Divyangjan Entrepreneurs
-
               <div className="text-gray-600">
-                ( In case of Non Individual enterprises at least 51% of the shreholding and controlling stake shpuld be held by Divyangjan Entrepreneurs)
+                (In case of Non Individual enterprises at least 51% of the shareholding and controlling stake should be held by Divyangjan Entrepreneurs)
               </div>
             </label>
           </div>
         </div>
 
         {/* Product Development Involvement */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
           <label className="block font-medium">Company Involved in</label>
-          <div className="flex gap-4" required>
+          <div className="flex gap-4">
             <label>
               <input type="radio" value="Product Development" {...register("involvement")} /> Product Dev.
             </label>
@@ -228,37 +317,36 @@ const IncubationForm = () => {
               <input type="radio" value="Others" {...register("involvement")} /> Others
             </label>
           </div>
+          {errors.involvement && <span className="text-red-500">{errors.involvement?.message}</span>}
         </div>
 
         {/* PAN & GST Number */}
-        <div className="flex gap-4 mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
+        <div className="flex gap-4 mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
           <div className="w-1/2">
             <label className="block font-medium">PAN No.</label>
             <input type="text" {...register("pan")} className="w-full border p-2 rounded" />
-            {errors.pan && <span className="text-red-500">{errors.pan.message}</span>}
+            {errors.pan && <span className="text-red-500">{errors.pan?.message}</span>}
           </div>
           <div className="w-1/2">
             <label className="block font-medium">GST No.</label>
             <input type="text" {...register("gst")} className="w-full border p-2 rounded" />
-            {errors.gst && <span className="text-red-500">{errors.gst.message}</span>}
+            {errors.gst && <span className="text-red-500">{errors.gst?.message}</span>}
           </div>
-
         </div>
 
         {/* Contact Information */}
-        <div className="flex gap-4 mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto ">
+        <div className="flex gap-4 mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full mx-auto">
           <div className="w-1/2">
             <label className="block font-medium">Mobile/Phone</label>
             <input type="text" {...register("phone")} className="w-full border p-2 rounded" />
-            {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
+            {errors.phone && <span className="text-red-500">{errors.phone?.message}</span>}
           </div>
           <div className="w-1/2">
             <label className="block font-medium">Email</label>
             <input type="email" {...register("email")} className="w-full border p-2 rounded" />
-            {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+            {errors.email && <span className="text-red-500">{errors.email?.message}</span>}
           </div>
         </div>
-
         {/* Board of Directors */}
         <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md w-full  mx-auto">
           <label className="block font-medium"> List of Board of Directors/Partners/proprietor:</label>
