@@ -5,18 +5,20 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar/Navbar";
 import EncubqationForm from "./components/EncubqationForm";
+import Footer from "./components/Footer/Footer";
 const App = () => {
   return (
     <>
    <Navbar />
       <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={<Home />} />
         <Route path="/form" element={<EncubqationForm />} />
         
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
     <Home/>
+    <Footer/>
     </>
   );
 };
