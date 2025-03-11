@@ -1,12 +1,13 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { createGlobalStyle } from "styled-components";
-
+import logo1 from "/Images/stpilogo-footer.png"
+import logo2 from "/Images/india.gov-logo.png"
 // ✅ Global style to apply white text to all <li> elements
 const GlobalStyle = createGlobalStyle`
   li {
     color: white;
-    list-style: none; /* Remove default bullet points */
+    list-style: disc; /* Remove default bullet points */
+    font-weight: 500;
   }
   a {
     text-decoration: none;
@@ -20,9 +21,10 @@ const GlobalStyle = createGlobalStyle`
 // ✅ Data Arrays
 const About = [
   { id: 1, txt: "About STPI", link: "#" },
-  { id: 2, txt: "About STPI2", link: "#" },
-  { id: 3, txt: "About STPI4", link: "#" },
-  { id: 4, txt: "About STPI3", link: "#" }
+  { id: 2, txt: "Objectives of STPI", link: "#" },
+  { id: 3, txt: "Functions of STPI", link: "#" },
+  { id: 4, txt: "Quality Objective", link: "#" },
+  { id: 5, txt: "STPI Centers", link: "#" }
 ];
 
 const Services = [
@@ -75,8 +77,8 @@ const Footer = () => {
   return (
     <>
       <GlobalStyle />
-      <div className="bg-gradient-to-b from-blue-900 to-blue-300 text-white">
-        <div className="flex flex-col lg:w-[90%] w-[100%] p-5 mx-auto">
+      <div className="bg-gradient-to-b from-[#010a65] to-[#27626e] text-white">
+        <div className="flex flex-col lg:w-[80%] w-[100%] p-5 mx-auto">
           {/* Grid layout for sections */}
           <div className="grid lg:grid-cols-5 w-[90%] mx-auto text-left gap-6">
             {/* ✅ Using the reusable FooterSection component */}
@@ -88,6 +90,30 @@ const Footer = () => {
           </div>
 
           {/* Additional footer content */}
+
+          <div className="flex gap-4 w-[90%] mx-auto">
+            <div><img src={logo1} alt="" /></div>
+            
+            <div className="flex flex-col ">
+                  <div><h1 className="text-3xl font-bold">Headquaters</h1></div>
+                  <div><p>Software Technology Parks of India, 1st Floor, Plate B, Office Block-1, East Kidwai Nagar, New Delhi-110023</p></div>
+            </div>
+
+            <div className="flex flex-col">
+                  <div>CONNECT WITH US</div>
+                  <div  className="grid grid-cols-4">
+                        <div>Twitter</div>
+                        <div>facebook</div>
+                        <div>Linkedin</div>
+                        <div>Youtube</div>
+                  </div>
+            </div>
+           
+            <div>
+              <img src={logo2} alt="" />
+            </div>
+          </div>
+
           <div className="mt-5 text-center text-sm">
             <p>© 2024 STPI. All Rights Reserved.</p>
           </div>
@@ -104,8 +130,12 @@ const FooterSection = ({ title, items }) => {
       <h1 className="text-[#fdb913] font-bold text-2xl mb-3">{title}</h1>
       <ul>
         {items.map((data) => (
-          <li key={data.id} className="mb-2">
-            <a href={data.link}>{data.txt}</a>
+          <li
+          className="md:text-[18px] "
+          key={data.id}>
+            <a 
+            className=" hover:text-yellow-500"
+            href={data.link}>{data.txt}</a>
           </li>
         ))}
       </ul>

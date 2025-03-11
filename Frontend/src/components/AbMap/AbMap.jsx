@@ -93,4 +93,4 @@ const AbMap = () => {
   )
 }
 
-export default AbMap
+export default AbMap;
