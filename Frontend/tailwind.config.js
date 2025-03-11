@@ -2,7 +2,12 @@
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+
+      fontFamily: { 
+        adobe: ["your-adobe-font-name", "sans-serif"], // Replace with your actual font name from Adobe Fonts
+      },
+    },
   },
   plugins: [],
 }
