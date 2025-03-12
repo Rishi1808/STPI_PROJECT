@@ -1,11 +1,6 @@
 const Form = require('../models/Form');
 
-/**
- * Submit Incubation Form
- * @desc    Process and save incubation form submission with file uploads
- * @route   POST /api/form/submit
- * @access  Public
- */
+
 const submitForm = async (req, res) => {
   try {
     const formData = req.body;
@@ -62,5 +57,7 @@ const submitForm = async (req, res) => {
     });
   }
 };
+
+
 
 module.exports = { submitForm };
