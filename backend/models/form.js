@@ -2,7 +2,13 @@ const mongoose = require("mongoose");
 
 const formSchema = new mongoose.Schema({
   // Basic Information
+  applicationId: {
+    type: String,
+    unique: true,
+    required: true
+  }, 
   unitName: {
+   // Unique Application ID
     type: String,
     required: [true, 'Unit name is required']
   },
@@ -14,14 +20,14 @@ const formSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  
+
   // Address Information
   registeredAddress: {
     type: String,
     required: [true, 'Registered address is required']
   },
   branchOffice: String,
-  
+
   // Status/Classification Details
   status: {
     type: String,
@@ -40,20 +46,20 @@ const formSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  
+
   // Company Details
   involvement: {
     type: String,
     enum: ['Product Development', 'R&D', 'Others']
   },
-  
+
   // Registration Details
   pan: {
     type: String,
     required: [true, 'PAN number is required']
   },
   gst: String,
-  
+
   // Contact Information
   phone: {
     type: String,
@@ -64,29 +70,29 @@ const formSchema = new mongoose.Schema({
     required: [true, 'Email is required'],
     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
   },
-  
+
   // Directors Information
   boardOfDirectors: String,
-  
+
   // Bank Details
   AccountNo: String,
   bankName: String,
   bankBranchAdd: String,
-  
+
   // Visit Details
   dateOfVisit: {
     type: Date
   },
   purposeOfVisit: String,
-  
+
   // Work Timing
   from: String,
   to: String,
-  
+
   // Time Period
   months: String,
   years: String,
-  
+
   // Facility Requirements
   incubation_space: {
     type: String,
@@ -95,7 +101,7 @@ const formSchema = new mongoose.Schema({
   },
   power_backup: String,
   internet_requirement: String,
-  
+
   // Business Support Facilities
   fax: {
     type: Boolean,
@@ -113,7 +119,7 @@ const formSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  
+
   // Charges
   lease_rent: {
     type: String,
@@ -131,15 +137,15 @@ const formSchema = new mongoose.Schema({
     type: String,
     default: 'As applicable'
   },
-  
+
   // Security Deposit
   dd_no: String,
   dd_date: Date,
   deposit_amount: String,
-  
+
   // Occupancy
   expected_occupancy_date: Date,
-  
+
   // File Uploads - Enhanced for Cloudinary integration
   uploadedFiles: {
     authLetter: {
@@ -165,17 +171,17 @@ const formSchema = new mongoose.Schema({
       }
     ]
   },
-  
+
   // Application Status
   applicationStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
   },
-  
+
   // Admin comments
   adminComments: String,
-  
+
   // Submission tracking
   submittedBy: String,
   submittedAt: {

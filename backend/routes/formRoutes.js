@@ -3,6 +3,7 @@ const { submitForm } = require("../controller/formController.js");
 const router = express.Router();
 const upload = require('../middleware/multerConfig.js');
 
+
 // Define the fields your form will need to handle
 const uploadFields = upload.fields([
   { name: 'authLetter', maxCount: 1 },
@@ -13,5 +14,6 @@ const uploadFields = upload.fields([
 
 // Route for form submission with multiple file uploads
 router.post("/submit", uploadFields, submitForm); 
+
 
 module.exports = router;

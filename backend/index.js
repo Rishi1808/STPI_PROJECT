@@ -15,7 +15,7 @@ connectDB();
 //routes
 const userRoutes=require('./routes/userRoute.js');
 const formRoutes=require('./routes/formRoutes.js')
-
+const adminRoutes=require('./routes/adminRoutes.js')
  // Import upload routes
 
 
@@ -30,6 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 //routes
 app.use('/api/auth', userRoutes);
 app.use('/api/form',formRoutes);
+app.use('/api/admin',adminRoutes);
+
  // Use upload routes
 
 app.listen(PORT, () => {

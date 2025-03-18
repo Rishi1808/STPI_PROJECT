@@ -1,63 +1,98 @@
-const Form = require('../models/Form');
+const Form = require("../models/Form");
 
+const generateApplicationId = async () => {
+  const year = new Date().getFullYear();
 
+  // Find the last submitted form based on `createdAt` for proper sorting
+  const lastForm = await Form.findOne().sort({ createdAt: -1 });
+
+  let nextNumber = 1; // Default start number
+  if (lastForm && lastForm.applicationId) {
+    const lastId = lastForm.applicationId.split("-")[2]; // Extract last part
+    nextNumber = isNaN(parseInt(lastId, 10)) ? 1 : parseInt(lastId, 10) + 1;
+  }
+
+  return `APP-${year}-${String(nextNumber).padStart(5, "0")}`;
+};
+
+// Form submission function
 const submitForm = async (req, res) => {
   try {
     const formData = req.body;
     const files = req.files;
-    
+    const applicationId = await generateApplicationId(); // Generate unique ID
+
     // Initialize uploadedFiles object for file storage
     const uploadedFiles = {};
-    
+
     // Process uploaded files if they exist
     if (files) {
-      // Add each file to the uploadedFiles object with its proper category
-      Object.keys(files).forEach(fileType => {
-        if (fileType === 'passportPhotos' && files[fileType].length > 0) {
-          // Handle array of passport photos
-          uploadedFiles[fileType] = files[fileType].map(photo => ({
+      Object.keys(files).forEach((fileType) => {
+        if (fileType === "passportPhotos" && files[fileType].length > 0) {
+          // Handle multiple passport photos
+          uploadedFiles[fileType] = files[fileType].map((photo) => ({
             url: photo.path,
             publicId: photo.filename,
-            originalName: photo.originalname
+            originalName: photo.originalname,
           }));
         } else if (files[fileType] && files[fileType].length > 0) {
-          // Handle single files
+          // Handle single file uploads
           uploadedFiles[fileType] = {
             url: files[fileType][0].path,
             publicId: files[fileType][0].filename,
-            originalName: files[fileType][0].originalname
+            originalName: files[fileType][0].originalname,
           };
         }
       });
     }
-    
+    console.log("Generated Application ID:", applicationId);
     // Create new form with data and uploaded files
     const newForm = new Form({
+      applicationId,
       ...formData,
       uploadedFiles,
-      submittedAt: new Date()
+      submittedAt: new Date(),
     });
-    
-    // Save the form to database
+
+    // Save to database
     const savedForm = await newForm.save();
-    
-    // Return success response with saved form data
+    console.log("New Form Data Before Save:", { applicationId, ...formData });
+
+
+    // Send success response
     res.status(201).json({
       success: true,
-      message: 'Incubation form submitted successfully',
-      data: savedForm
+      message: "Incubation form submitted successfully",
+      applicationId, // Include the generated ID in response
+      data: savedForm,
     });
-    
   } catch (error) {
-    console.error('Form submission error:', error);
+    console.error("Form submission error:", error);
     res.status(500).json({
       success: false,
-      message: 'Error submitting incubation form',
-      error: error.message
+      message: "Error submitting incubation form",
+      error: error.message,
     });
   }
 };
 
 
+const getAllForm= async (req, res) => {
+  try {
+    const forms = await Form.find();
+    res.status(200).json({
+      success: true,
+      message: "All forms fetched successfully",
+      data: forms,
+    });
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching forms",
+      error: error.message,
+    });
+  }
+};
 
-module.exports = { submitForm };
+module.exports = { submitForm, getAllForm };

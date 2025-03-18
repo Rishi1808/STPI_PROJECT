@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar/Navbar";
 import EncubqationForm from "./components/EncubqationForm";
 import Footer from "./components/Footer/Footer";
+import Fromlist from "./pages/admin/Fromlist";
 const App = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const App = () => {
         
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/adminGet" element={<Fromlist />} />
       </Routes>
     <Home/>
     <Footer/>
