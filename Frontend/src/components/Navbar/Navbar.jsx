@@ -57,6 +57,10 @@ export default function Navbar() {
         <li
           key={item}
           className="text-white hover:bg-gray-600 px-3 py-2 rounded-md cursor-pointer transition duration-200"
+          onClick={() => {
+            if (item === "HOME") navigate("/");
+            // Add routes for other items if needed
+          }}
         >
           {item}
         </li>
@@ -116,7 +120,8 @@ export default function Navbar() {
         <ul className="md:hidden bg-gray-800 p-4 space-y-3 text-center">
           {menuItems.map((item) => (
             item === "SERVICES" ? (
-              <li key={item} className="text-white  p-2 rounded-md cursor-pointer relative">
+              <li key={item} 
+              className="text-white  p-2 rounded-md cursor-pointer relative">
                 <button
                   className="w-full flex justify-center items-center gap-2"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -141,7 +146,13 @@ export default function Navbar() {
               <li
                 key={item}
                 className="text-white hover:bg-gray-600 p-2 rounded-md cursor-pointer"
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  if (item === "HOME")
+                    {
+                    setIsOpen(true)
+                    navigate("/")
+                    }
+                  }}
               >
                 {item}
               </li>

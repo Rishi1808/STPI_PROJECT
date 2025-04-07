@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -10,8 +10,13 @@ import Footer from "./components/Footer/Footer";
 import Fromlist from "./pages/admin/Fromlist";
 
 const App = () => {
-  // 👇 Only useState - determine if Home should show initially
-  const [showHome] = useState(() => window.location.pathname === "/");
+  const location = useLocation();
+  const [showHome, setShowHome] = useState(true);
+
+  useEffect(() => {
+    // Show Home component only on root path
+    setShowHome(location.pathname === "/");
+  }, [location]);
 
   return (
     <>
@@ -24,7 +29,6 @@ const App = () => {
         <Route path="/adminGet" element={<Fromlist />} />
       </Routes>
 
-      {/* ✅ showHome is set once based on initial path */}
       {showHome && <Home />}
 
       <Footer />
