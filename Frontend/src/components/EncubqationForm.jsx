@@ -109,7 +109,10 @@ const IncubationForm = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-gray-200 shadow-md rounded-lg">
+    <div className="sm:max-w-[60%] max-w-[90%] mx-auto p-6 bg-gray-200 shadow-md rounded-lg my-5 ">
+
+
+
       <h2 className="text-lg font-semibold text-center mb-4">
         REQUEST FOR ALLOTMENT/EXTENSION OF INCUBATION SPACE
       </h2>
