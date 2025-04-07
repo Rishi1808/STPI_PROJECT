@@ -19,7 +19,8 @@ export default function Navbar() {
   const menuItems = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
 
   return (
-  <nav className=" shadow-md sm:h-[33vh] h-[20vh] flex flex-col justify-between" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover' }} >
+  <nav className=" shadow-md sm:h-[20vh] h-[10vh] flex flex-col justify-between" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover',  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat', }} >
 
 
     <div className="shadow-[inset_0_60px_30px_-15px_rgba(0,0,0,1.8)]">
