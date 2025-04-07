@@ -1,26 +1,33 @@
 import { Routes, Route } from "react-router-dom";
+import { useState } from "react";
+
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-// import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar/Navbar";
 import EncubqationForm from "./components/EncubqationForm";
 import Footer from "./components/Footer/Footer";
 import Fromlist from "./pages/admin/Fromlist";
+
 const App = () => {
+  // 👇 Only useState - determine if Home should show initially
+  const [showHome] = useState(() => window.location.pathname === "/");
+
   return (
     <>
-   <Navbar />
+      <Navbar />
+
       <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
         <Route path="/form" element={<EncubqationForm />} />
-        
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/adminGet" element={<Fromlist />} />
       </Routes>
-    <Home/>
-    <Footer/>
+
+      {/* ✅ showHome is set once based on initial path */}
+      {showHome && <Home />}
+
+      <Footer />
     </>
   );
 };

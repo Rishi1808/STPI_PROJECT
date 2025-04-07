@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 import { AuthContext } from "../context/AuthContext";
+import logo from "/Images/logo.png";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -22,11 +23,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+    <div className="flex justify-center items-center sm:min-h-[70vh] min-h-[30vh] bg-gray-100 p-7
+                   ">
+      <div className="bg-white p-8  w-96  bg-gray-900/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20">
+        <div className="h-[10vh] bg-blue-900 flex  items-center rounded-[5px]"><div><img src={logo} alt="" /></div></div>
+        {/* <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2> */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4 my-4">
           <input
             type="email"
             placeholder="Email"
@@ -51,7 +54,7 @@ const Login = () => {
           </button>
         </form>
         <p className="text-center text-gray-600 mt-4">
-          Don't have an account? <a href="/signup" className="text-blue-500 hover:underline">Sign Up</a>
+        Don`t have an account? <a href="/signup" className="text-blue-500 hover:underline">Sign Up</a>
         </p>
       </div>
     </div>
