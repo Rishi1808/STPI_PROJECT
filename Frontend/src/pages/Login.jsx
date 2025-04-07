@@ -20,11 +20,11 @@ const Login = () => {
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
+    // updated checking
   };
 
   return (
-    <div className="flex justify-center items-center sm:min-h-[70vh] min-h-[30vh] bg-gray-100 p-7
-                   ">
+    <div className="flex justify-center items-center sm:min-h-[70vh] min-h-[30vh] bg-gray-100 p-7">
       <div className="bg-white p-8  w-96  bg-gray-900/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20">
         <div className="h-[10vh] bg-blue-900 flex  items-center rounded-[5px]"><div><img src={logo} alt="" /></div></div>
         {/* <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2> */}
