@@ -1,9 +1,8 @@
 import  { useEffect, useState } from "react";
-
+import { useNavigate } from 'react-router-dom';
 const FormsTable = () => {
   const [forms, setForms] = useState([]);
-  
-
+  const navigate = useNavigate(); // Use useNavigate hook for navigation
   useEffect(() => {
     const token = localStorage.getItem("token");
     console.log("Token:", token); // ✅ See what's in localStorage
@@ -23,8 +22,11 @@ const FormsTable = () => {
       })
       .catch((error) => console.error("Error fetching forms:", error));
   }, []);
-  
-  
+
+  const handleViewForm = (applicationId) => {
+    navigate(`/form-preview/${applicationId}`);
+  };
+ 
 
   return (
     <div className="container mx-auto mt-10 p-6">
@@ -47,7 +49,7 @@ const FormsTable = () => {
                 <td className="py-3 px-6 text-center">
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                    onClick={() => alert(`Viewing Form: ${form.applicationId}`)}
+                    onClick={() => handleViewForm(form.applicationId)}
                   >
                     View Form
                   </button>

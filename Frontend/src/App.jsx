@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar/Navbar";
 import EncubqationForm from "./components/EncubqationForm";
 import Footer from "./components/Footer/Footer";
 import Fromlist from "./pages/admin/Fromlist";
+import PreviewForm from "./pages/admin/PreviewForm"; // Assuming this is the correct path
 
 const App = () => {
   const location = useLocation();
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/adminGet" element={<Fromlist />} />
+        <Route path="/form-preview/:formNumber" element={<PreviewForm />} />
       </Routes>
 
       {showHome && <Home />}

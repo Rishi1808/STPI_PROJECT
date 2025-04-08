@@ -95,4 +95,33 @@ const getAllForm= async (req, res) => {
   }
 };
 
-module.exports = { submitForm, getAllForm };
+const getFormByNumber = async (req, res) => {
+  try {
+    const { formNumber } = req.params;
+
+    const form = await Form.findOne({ applicationId: formNumber });
+
+    if (!form) {
+      return res.status(404).json({
+        success: false,
+        message: "Form not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      form,
+    });
+
+  } catch (error) {
+    console.error("Error fetching form:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+
+
+module.exports = { submitForm, getAllForm, getFormByNumber  };
