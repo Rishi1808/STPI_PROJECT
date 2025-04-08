@@ -15,13 +15,15 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await API.post("api/auth/login", { email, password });
+      const token = response.data.token; // ✅ fixed here
+      localStorage.setItem("token", token); // ✅ store token
       login(response.data);
-      navigate("/dashboard");
+      navigate("/adminGet");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
-    // updated checking
   };
+  
 
   return (
     <div className="flex justify-center items-center sm:min-h-[70vh] min-h-[30vh] bg-gray-100 p-7">

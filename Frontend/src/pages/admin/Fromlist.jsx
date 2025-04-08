@@ -2,24 +2,29 @@ import  { useEffect, useState } from "react";
 
 const FormsTable = () => {
   const [forms, setForms] = useState([]);
-  const token = localStorage.getItem("token"); // Get the JWT Token
+  
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("Token:", token); // ✅ See what's in localStorage
+  
     fetch("http://localhost:5000/api/admin/getAllForms", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Q5MmRmMDhjYmI5OWY3M2Q4OWVjOGIiLCJlbWFpbCI6ImFkbWluQHN0cGkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQyMjkxMDI0LCJleHAiOjE3NDIyOTE5MjR9.61J-O25beUvWNY6k7XBj1g8Yc996aDHIr85MtSJXuqA`, // Auth header
+        Authorization: `Bearer ${token}`, // ✅ Send token with Bearer prefix
       },
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          setForms(data.data); // Set fetched forms
+          setForms(data.data);
         }
       })
       .catch((error) => console.error("Error fetching forms:", error));
   }, []);
+  
+  
 
   return (
     <div className="container mx-auto mt-10 p-6">
