@@ -10,7 +10,8 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-
+ 
+  
   const handleLogout = () => {
     logout();
     navigate("/login"); // Redirect to login after logout
@@ -46,7 +47,8 @@ export default function Navbar() {
             <ul className="absolute left-0 mt-2 bg-gray-800 text-white rounded-md shadow-md w-40">
               <li
                 className="p-2 hover:bg-gray-600 cursor-pointer"
-                onClick={() => navigate("/form")}
+                onClick={() => navigate(user ? "/form" :
+                  "/login")}
               >
                 Incubation
               </li>

@@ -10,7 +10,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  
+ 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -18,7 +19,12 @@ const Login = () => {
       const token = response.data.token; // ✅ fixed here
       localStorage.setItem("token", token); // ✅ store token
       login(response.data);
+      if(response.data.role === "admin") {
       navigate("/adminGet");
+      }
+      else if(response.data.role === "user") {
+        navigate("/form");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

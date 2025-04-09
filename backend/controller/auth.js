@@ -74,14 +74,18 @@ const login = async (req, res) => {
         const accessToken=jwt.sign({
             userId:currUser._id,
             email:currUser.email,
-            role:currUser.role
+            role:currUser.role,
+            name:currUser.name
         },process.env.JWT_SECRET_KEY,{expiresIn:"15m"});
          
         res.status(200).json({
-            success:true,
-            message:"User logged in successfully",
-            token: accessToken
-        });
+            success: true,
+            message: "User logged in successfully",
+            token: accessToken,
+            name: currUser.name,   // ✅ Add this
+            role: currUser.role    // ✅ Optional, if used elsewhere
+          });
+          
 
 
   }catch(err){

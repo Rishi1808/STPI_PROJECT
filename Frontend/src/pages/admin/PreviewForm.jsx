@@ -82,11 +82,18 @@ const PreviewForm = () => {
   );
 };
 
+import PropTypes from "prop-types";
+
 const Field = ({ label, value }) => (
   <div>
     <span className="text-gray-600 font-medium">{label}: </span>
     <span>{value}</span>
   </div>
 );
+
+Field.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+};
 
 export default PreviewForm;
