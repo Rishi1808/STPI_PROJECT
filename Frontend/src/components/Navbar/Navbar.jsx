@@ -10,7 +10,8 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
- 
+  const [isLoginDropdownOpen, setIsLoginDropdownOpen] = useState(false);
+
   
   const handleLogout = () => {
     logout();
@@ -70,24 +71,52 @@ export default function Navbar() {
     )}
 
     {/* Display User Name & Logout Button */}
-    {user ? (
-      <div className="flex items-center space-x-4">
-        <span className="text-white font-semibold">Welcome, {user.name}</span>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-200"
+ {user ? (
+  <div className="flex items-center space-x-4">
+    <span className="text-white font-semibold">Welcome, {user.name}</span>
+    <button
+      onClick={handleLogout}
+      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-200"
+    >
+      Logout
+    </button>
+  </div>
+) : (
+  <div className="relative">
+    <button
+      onClick={() => setIsLoginDropdownOpen(!isLoginDropdownOpen)}
+      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
+    >
+      Login
+    </button>
+    {isLoginDropdownOpen && (
+      <ul className="absolute right-0 mt-2 bg-white rounded-md shadow-md w-32 z-50 list-none">
+        <li
+          className="p-2 text-black text-center cursor-pointer hover:bg-blue-500 hover:text-white transition duration-200"
+          onClick={() => {
+            navigate("/login?type=admin");
+            setIsLoginDropdownOpen(false);
+          }}
+          
         >
-          Logout
-        </button>
-      </div>
-    ) : (
-      <button
-        onClick={() => navigate("/login")}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
-      >
-        Login
-      </button>
+          Admin
+        </li>
+        <li
+          className="p-2 text-black text-center cursor-pointer hover:bg-blue-500 hover:text-white transition duration-200"
+          onClick={() => {
+            navigate("/login?type=client");
+            setIsLoginDropdownOpen(false);
+          }}
+          
+        >
+          Client
+        </li>
+      </ul>
     )}
+  </div>
+)}
+
+
   </ul>
 
   {/* Mobile Menu Button */}
