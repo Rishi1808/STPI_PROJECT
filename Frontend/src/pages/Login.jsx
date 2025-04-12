@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const endpoint = selectedRole === "admin" ? "api/admin/login" : "api/auth/login";
-      const response = await API.post(endpoint, { email, password });
+      const response = await API.post(endpoint, { email, password, selectedRole });
 
       const token = response.data.token;
       localStorage.setItem("token", token);
