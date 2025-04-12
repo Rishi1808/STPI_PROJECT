@@ -61,7 +61,7 @@ const login = async (req, res) => {
           message: "Invalid credentials or user not found",
         });
       }
-  
+     console.log(currUser.role)
       // Check if the role matches
       if (currUser.role !== role) {
         return res.status(403).json({
