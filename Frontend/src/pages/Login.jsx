@@ -19,6 +19,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      
       const response = await API.post("api/auth/login", { email, password });
 
       const token = response.data.token;
