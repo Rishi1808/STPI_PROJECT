@@ -11,7 +11,7 @@ const Login = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [selectedRole, setSelectedRole] = useState("client"); // default to client
+  const [selectedRole, setSelectedRole] = useState("user"); // default to user
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -83,11 +83,11 @@ const Login = () => {
             </button>
             <button
               className={`px-3 py-1 text-sm rounded-md transition ${
-                selectedRole === "client"
+                selectedRole === "user"
                   ? "bg-yellow-500 text-white"
                   : "bg-white text-black"
               }`}
-              onClick={() => setSelectedRole("client")}
+              onClick={() => setSelectedRole("user")}
             >
               Client
             </button>
