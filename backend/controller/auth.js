@@ -49,57 +49,64 @@ const signup = async (req, res) => {
 //login controller
 
 const login = async (req, res) => {
-  try{
-        //extract email and password from request body
-        const {email,password}=req.body;
-        //check user and email is present or not
-        const currUser=await User.findOne({email});
-       
-        if(!currUser){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid credentials or user not found"
-            });
-        }
-        console.log("user is found");
-        console.log(currUser);
-        //compare password
-        const isMatch=await bcrypt.compare(password,currUser.password);
-        if(!isMatch){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid credentials"
-            });
-        }
-        const accessToken=jwt.sign({
-            userId:currUser._id,
-            email:currUser.email,
-            role:currUser.role,
-            name:currUser.name
-        },process.env.JWT_SECRET_KEY,{expiresIn:"15m"});
-         
-        res.status(200).json({
-            success: true,
-            message: "User logged in successfully",
-            token: accessToken,
-            name: currUser.name,   // ✅ Add this
-            role: currUser.role    // ✅ Optional, if used elsewhere
-          });
-          
-
-
-  }catch(err){
-      console.log(err);
-
-      res.status(500).json({
-          success:false,
-          message:"Server error"
+    try {
+      const { email, password, role } = req.body; // 👈 include role
+  
+      // Find user by email
+      const currUser = await User.findOne({ email });
+  
+      if (!currUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid credentials or user not found",
+        });
+      }
+  
+      // Check if the role matches
+      if (currUser.role !== role) {
+        return res.status(403).json({
+          success: false,
+          message: `Unauthorized. Please login through the ${currUser.role} portal.`,
+        });
+      }
+  
+      // Check if password matches
+      const isMatch = await bcrypt.compare(password, currUser.password);
+      if (!isMatch) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid credentials",
+        });
+      }
+  
+      // Generate JWT
+      const accessToken = jwt.sign(
+        {
+          userId: currUser._id,
+          email: currUser.email,
+          role: currUser.role,
+          name: currUser.name,
+        },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "15m" }
+      );
+  
+      res.status(200).json({
+        success: true,
+        message: "User logged in successfully",
+        token: accessToken,
+        name: currUser.name,
+        role: currUser.role,
       });
-
-
-  }
-
-}
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+    }
+  };
+  
 
 module.exports = {
     signup,
