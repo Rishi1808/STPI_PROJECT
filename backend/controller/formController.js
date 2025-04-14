@@ -122,6 +122,62 @@ const getFormByNumber = async (req, res) => {
   }
 };
 
+ // Update with your actual model path
+
+const updateFormStatus = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { status, message } = req.body; // Assume status is "Accepted" or "Rejected", and message is optional
+
+    // Find the form by applicationId
+    const form = await Form.findOne({ applicationId });
+
+    if (!form) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    // Update the form's status and message
+    form.status = status;
+    form.adminMessage = message || "No message provided";
+
+    // Save the updated form
+    await form.save();
+
+    return res.json({
+      message: `Form status updated to ${status}`,
+      form: {
+        status: form.status,
+        adminMessage: form.adminMessage,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getFormStatus = async (req, res) => {
+  try {
+    const formNumber = req.params.formNumber;
+    
+    // Fetch the form status from the database by form number
+    const form = await Form.findOne({ applicationId: formNumber });
+
+    if (!form) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    // Return the status and any relevant message
+    return res.json({
+      status: form.status,
+      message: form.adminMessage || "No message provided",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 
 
-module.exports = { submitForm, getAllForm, getFormByNumber  };
+
+module.exports = { submitForm, getAllForm, getFormByNumber, updateFormStatus,getFormStatus };

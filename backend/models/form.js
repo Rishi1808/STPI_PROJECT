@@ -178,6 +178,20 @@ const formSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
   },
+  status: {
+    type: String,
+    enum: ['Pending', 'Accepted', 'Rejected'], // Ensure 'Accepted' is listed here
+    default: 'Pending',
+  },
+  
+  // Admin comments
+  adminComments: String,
+  
+  // 🔴 New field
+  rejectionMessage: {
+    type: String,
+    default: ""
+  },
 
   // Admin comments
   adminComments: String,
