@@ -1,8 +1,7 @@
 import { createContext, useState, useEffect, useMemo } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
-
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
@@ -12,23 +11,31 @@ export default function AuthProvider({ children }) {
     try {
       const storedUser = localStorage.getItem("user");
       return storedUser ? JSON.parse(storedUser) : null;
-    } catch {
+    } catch (err) {
+      console.error("❌ Error loading user from localStorage:", err);
       return null;
     }
   });
 
+  // Save user to localStorage on change
   useEffect(() => {
     if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
+      try {
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log("💾 User saved to localStorage:", user);
+      } catch (err) {
+        console.error("❌ Failed to save user to localStorage:", err);
+      }
     }
   }, [user]);
 
   const login = (userData) => {
-    console.log("User Data on Login:", userData);
+    console.log("📥 login() called with:", userData);
     setUser(userData);
   };
 
   const logout = () => {
+    console.log("🚪 User logged out.");
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
