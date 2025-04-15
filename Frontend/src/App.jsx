@@ -9,13 +9,12 @@ import EncubqationForm from "./components/EncubqationForm";
 import Footer from "./components/Footer/Footer";
 import Fromlist from "./pages/admin/Fromlist";
 import PreviewForm from "./pages/admin/PreviewForm"; // Assuming this is the correct path
-
+import Landingpage from "./pages/admin/landingpage";
 const App = () => {
   const location = useLocation();
   const [showHome, setShowHome] = useState(true);
 
   useEffect(() => {
-    // Show Home component only on root path
     setShowHome(location.pathname === "/");
   }, [location]);
 
@@ -27,7 +26,8 @@ const App = () => {
         <Route path="/form" element={<EncubqationForm />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/adminGet" element={<Fromlist />} />
+        {/* <Route path="/adminGet" element={<Fromlist />} /> */}
+        <Route path="/adminGet" element={<Landingpage/>} />
         <Route path="/form-preview/:formNumber" element={<PreviewForm />} />
       </Routes>
 
