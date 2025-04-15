@@ -38,7 +38,7 @@ export default function Signup() {
         setFormData({ name: "", email: "", password: "", role: "user" });
       }
     } catch (err) {
-      setError("Server error, try again later.");
+      setError("Server error, try again later.",err.message);
     }
   };
 
