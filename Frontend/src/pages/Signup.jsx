@@ -12,7 +12,7 @@ export default function Signup() {
     state: "",
     district: "",
     dob: "",
-    role: "user",
+    role: "user", // default role
   });
 
   const [error, setError] = useState("");
@@ -81,7 +81,8 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+    console.log("Form data:", formData);
+  
     const requiredFields = [
       "firstName",
       "lastName",
@@ -92,42 +93,47 @@ export default function Signup() {
       "state",
       "district",
     ];
+  
     for (const field of requiredFields) {
       if (!formData[field]) {
         setError("Please fill all required fields.");
         return;
       }
     }
-
+  
     try {
       const response = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
+  
       const data = await response.json();
-      if (!data.success) {
+  
+      if (!response.ok || !data.success) {
         setError(data.message || "Signup failed!");
-      } else {
-        alert("Signup successful!");
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          nationality: "",
-          country: "",
-          state: "",
-          district: "",
-          dob: "",
-          role: "user",
-        });
+        return;
       }
+  
+      alert("Signup successful!");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        nationality: "",
+        country: "",
+        state: "",
+        district: "",
+        dob: "",
+        role: "user",
+      });
     } catch (err) {
-      setError("Server error, try again later.",err.message);
+      console.error("Signup error:", err);
+      setError("Server error, try again later.");
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

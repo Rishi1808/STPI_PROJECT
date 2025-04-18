@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const signup = async (req, res) => {
     try {
         // Extract user details from request body
-        const { firstName, lastName, email, password, role, nationality, location, dob } = req.body;
+        const { firstName, lastName, email, password, role, nationality, country, state, district, dob } = req.body;
 
         // Check if user already exists with the same email
         const user = await User.findOne({ email });
@@ -21,15 +21,19 @@ const signup = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create a new user with additional fields
+        // Create a new user with the provided fields
         const newUser = new User({
             firstName,
             lastName,
             email,
             password: hashedPassword,
             role: role || "user", // default role is 'user'
-            nationality,
-            location, // should be an object with country, state, and district
+            nationality: nationality || "", // default empty string for nationality
+            location: {
+                country,
+                state,
+                district,
+            },
             dob,
         });
 
