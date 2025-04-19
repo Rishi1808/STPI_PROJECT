@@ -1,9 +1,49 @@
-import { useContext } from "react";
+import { useContext ,useEffect, useState} from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
+import axios from "axios";
+
 const ClientDashboard = () => {
   const { user } = useContext(AuthContext);
 
-  return (
+  const [locationNames, setLocationNames] = useState({
+    country: "",
+    state: "",
+    district: "",
+  });
+
+
+  useEffect(() => {
+    const fetchLocationNames = async () => {
+      try {
+        if (user?.location?.country) {
+          const countryRes = await axios.get(
+            `https://secure.geonames.org/getJSON?geonameId=${user.location.country}&username=shivam1234`
+          );
+          const countryName = countryRes.data.name;
+
+          const stateRes = await axios.get(
+            `https://secure.geonames.org/getJSON?geonameId=${user.location.state}&username=shivam1234`
+          );
+          const stateName = stateRes.data.name;
+
+          // District is stored as name already
+          const districtName = user.location.district;
+
+          setLocationNames({
+            country: countryName,
+            state: stateName,
+            district: districtName,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching location names:", error);
+      }
+    };
+
+    fetchLocationNames();
+  }, [user]);
+
+    return (
     <div className='sm:max-w-[90%] flex justify-around mx-auto my-[5vh] rounded-md gap-[2rem] sm:flex-nowrap flex-wrap'>
       
       {/* Profile Section */}
@@ -21,9 +61,18 @@ const ClientDashboard = () => {
 
         <div className="bg-white p-4 rounded-md border border-gray-300">
           <h2 className="text-lg font-semibold mb-2 text-center">User Details</h2>
-          <p className="text-gray-700"><strong>Name:</strong> {user?.name || "N/A"}</p>
+          <p className="text-gray-700"><strong>Name:</strong> {user?.firstName +" "+ user?.lastName || "N/A"}</p>
           <p className="text-gray-700"><strong>Role:</strong> {user?.role || "N/A"}</p>
           <p className="text-gray-700"><strong>Email:</strong> {user?.email || "N/A"}</p>
+          <p className="text-gray-700">
+               <strong>Location:</strong>{" "}
+               {locationNames.country && locationNames.state && locationNames.district
+                ? `${locationNames.country}, ${locationNames.state}, ${locationNames.district}`
+                : "N/A"}
+          </p>
+
+
+
         </div>
       </div>
 
@@ -32,8 +81,10 @@ const ClientDashboard = () => {
       <div className="bg-blue-500">
       <h2 className="text-lg text-white font-semibold mb-2 text-center">CLIENT PANNEL</h2>
         </div>
-        
-        <p>This is your approval/disapproval status section.</p>
+        <p className="text-center">This is your approval/disapproval status section.</p>
+        <button className="bg-green-900/20">
+          Apply for Incubation
+        </button>
       </div>
 
       {/* Notice and Notification Section */}
