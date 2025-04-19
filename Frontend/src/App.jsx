@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar/Navbar";
-// import EncubqationForm from "./components/EncubqationForm";
+import EncubqationForm from "./components/EncubqationForm";
 import Footer from "./components/Footer/Footer";
 // import Fromlist from "./pages/admin/Fromlist";
 import PreviewForm from "./pages/admin/PreviewForm"; 
@@ -25,7 +25,7 @@ const App = () => {
       <Navbar />
       <Routes>
         {/* below will be routed if the user d */}
-        {/* <Route path="/form" element={<EncubqationForm />} /> */}
+        <Route path="/formfill" element={<EncubqationForm />} />
         <Route path="/form" element={<ClientDashboard/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

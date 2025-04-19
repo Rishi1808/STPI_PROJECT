@@ -1,6 +1,7 @@
 import { useContext ,useEffect, useState} from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ClientDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -10,7 +11,7 @@ const ClientDashboard = () => {
     state: "",
     district: "",
   });
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLocationNames = async () => {
@@ -47,7 +48,8 @@ const ClientDashboard = () => {
     <div className='sm:max-w-[90%] flex justify-around mx-auto my-[5vh] rounded-md gap-[2rem] sm:flex-nowrap flex-wrap'>
       
       {/* Profile Section */}
-      <div className='w-[50%] h-auto bg-gray-900/10 p-4 rounded-lg shadow-md flex flex-col gap-4 border border-white/20'>
+      <div className='   bg-black/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6
+                        w-[50%] h-auto m-5 flex flex-col gap-4 '>
         <div className="h-[200px] w-[200px] bg-white flex items-center justify-center border border-gray-300 rounded-[50%] mx-auto">
           <span className="text-gray-500">Profile Picture</span>
         </div>
@@ -77,18 +79,24 @@ const ClientDashboard = () => {
       </div>
 
       {/* Approval / Disapproval Notification Section */}
-      <div className="w-[100%] h-auto bg-gray-900/10 p-4 rounded-lg shadow-md border border-white/20">
+      <div className="  bg-black/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6
+                        w-[100%] h-auto m-5">
       <div className="bg-blue-500">
       <h2 className="text-lg text-white font-semibold mb-2 text-center">CLIENT PANNEL</h2>
         </div>
         <p className="text-center">This is your approval/disapproval status section.</p>
-        <button className="bg-green-900/20">
+       <div className="flex justify-center">
+       <button 
+        onClick ={()=>{ navigate("/formfill")}}
+        className="bg-green-900/20 ">
           Apply for Incubation
         </button>
+       </div>
       </div>
 
       {/* Notice and Notification Section */}
-      <div className="w-[100%] h-auto bg-gray-900/10 p-4 rounded-lg shadow-md border border-white/20">
+      <div className="  bg-black/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6
+                        w-[100%] h-auto m-5">
         <div className="bg-blue-500">
              <h2 className="text-lg font-semibold mb-2 text-center text-white">NOTIFICATIONS</h2>
         </div>
