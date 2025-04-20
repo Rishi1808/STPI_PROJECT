@@ -7,7 +7,6 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar/Navbar";
 import EncubqationForm from "./components/EncubqationForm";
 import Footer from "./components/Footer/Footer";
-// import Fromlist from "./pages/admin/Fromlist";
 import PreviewForm from "./pages/admin/PreviewForm"; 
 import Landingpage from "./pages/admin/Landingpage";
 import ClientDashboard from "./pages/Client/clientDashboard";

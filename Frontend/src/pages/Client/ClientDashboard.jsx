@@ -1,14 +1,13 @@
-import { useContext ,useEffect, useState} from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import refresh from "/Images/loading-arrow.png"
+import refresh from "/Images/loading-arrow.png";
 import img1 from "/Images/cubicle1.jpeg";
 import img2 from "/Images/cubicle2.jpeg";
 import img3 from "/Images/cubicle3.jpeg";
 import img4 from "/Images/cubicle1.jpeg";
 import img5 from "/Images/cubicle4.jpeg";
-
 
 const ClientDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -20,21 +19,14 @@ const ClientDashboard = () => {
   });
   const navigate = useNavigate();
 
-  // for carousel
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   useEffect(() => {
-    let index = 0;
     const interval = setInterval(() => {
-      const carousel = document.getElementById("carouselSlides");
-      if (!carousel) return;
-  
-      index = (index + 1) % 5;
-      carousel.style.transform = `translateX(-${index * 100}%)`;
-    }, 3000); // Slide every 3 seconds
-  
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % 5);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
-  
-
 
   useEffect(() => {
     const fetchLocationNames = async () => {
@@ -43,20 +35,14 @@ const ClientDashboard = () => {
           const countryRes = await axios.get(
             `https://secure.geonames.org/getJSON?geonameId=${user.location.country}&username=shivam1234`
           );
-          const countryName = countryRes.data.name;
-
           const stateRes = await axios.get(
             `https://secure.geonames.org/getJSON?geonameId=${user.location.state}&username=shivam1234`
           );
-          const stateName = stateRes.data.name;
-
-          // District is stored as name already
-          const districtName = user.location.district;
 
           setLocationNames({
-            country: countryName,
-            state: stateName,
-            district: districtName,
+            country: countryRes.data.name,
+            state: stateRes.data.name,
+            district: user.location.district,
           });
         }
       } catch (error) {
@@ -67,12 +53,10 @@ const ClientDashboard = () => {
     fetchLocationNames();
   }, [user]);
 
-    return (
-    <div className='sm:max-w-[90%] flex justify-around mx-auto my-[5vh] rounded-md gap-[2rem] sm:flex-nowrap flex-wrap'>
-      
+  return (
+    <div className="sm:max-w-[90%] flex justify-around mx-auto my-[5vh] rounded-md gap-[2rem] sm:flex-nowrap flex-wrap">
       {/* Profile Section */}
-      <div className='   bg-black/20 backdrop-blur-lg border border-black/30 rounded-xl shadow-lg p-6
-                        w-[50%] h-auto m-5 flex flex-col gap-4 '>
+      <div className="bg-black/20 backdrop-blur-lg border border-black/30 rounded-xl shadow-lg p-6 w-[50%] h-auto m-5 flex flex-col gap-4">
         <div className="h-[200px] w-[200px] bg-white flex items-center justify-center border border-gray-300 rounded-[50%] mx-auto">
           <span className="text-gray-500">Profile Picture</span>
         </div>
@@ -86,109 +70,97 @@ const ClientDashboard = () => {
 
         <div className="bg-white p-4 rounded-md border border-gray-300">
           <h2 className="text-lg font-semibold mb-2 text-center">User Details</h2>
-          <p className="text-gray-700"><strong>Name:</strong> {user?.firstName +" "+ user?.lastName || "N/A"}</p>
+          <p className="text-gray-700"><strong>Name:</strong> {user?.firstName + " " + user?.lastName || "N/A"}</p>
           <p className="text-gray-700"><strong>Role:</strong> {user?.role || "N/A"}</p>
           <p className="text-gray-700"><strong>Email:</strong> {user?.email || "N/A"}</p>
           <p className="text-gray-700">
-               <strong>Location:</strong>{" "}
-               {locationNames.country && locationNames.state && locationNames.district
-                ? `${locationNames.country}, ${locationNames.state}, ${locationNames.district}`
-                : "N/A"}
+            <strong>Location:</strong>{" "}
+            {locationNames.country && locationNames.state && locationNames.district
+              ? `${locationNames.country}, ${locationNames.state}, ${locationNames.district}`
+              : "N/A"}
           </p>
-
-
-
         </div>
       </div>
 
-      {/* Approval / Disapproval Notification Section */}
-      <div className="  bg-black/20 backdrop-blur-lg border border-black/30  rounded-xl shadow-lg p-6
-                        w-[100%] h-auto m-5">
-      <div className="bg-blue-500">
-      <h2 className="text-lg text-white font-semibold mb-2 text-center">CLIENT PANNEL</h2>
+      {/* Approval Section */}
+      <div className="bg-black/20 backdrop-blur-lg border border-black/30 rounded-xl shadow-lg p-6 w-[100%] h-auto m-5">
+        <div className="bg-blue-500">
+          <h2 className="text-lg text-white font-semibold mb-2 text-center">CLIENT PANEL</h2>
         </div>
         <marquee direction="left" className="text-center text-green-800 font-semibold">This is your approval/disapproval status section.</marquee>
-       
-       {/* this button will guide the user to incubation form filling */}
-       <div className="flex justify-center">
-            <button
-              onClick={() => { navigate("/formfill") }}
-              className="bg-[#0098ff] hover:bg-blue-700 w-[90%] h-[4vh] font-bold text-lg rounded-md text-white 
-                        shadow-[0_2px_0_0_#064585]  hover:shadow-[0_4px_0_0_#4c1d95] 
-                        active:translate-y-[2px] active:shadow-none transition-all duration-150 ease-in-out"
-            >
-              APPLY FOR INCUBATION
-          </button>
-        </div>
 
-
-       {/* this window will be displayed ghe user status of applied formm */}
-
-      <div className="flex justify-center w-full mt-3">
-        <div className="flex w-[90%] h-[5vh] gap-4">
-          {/* Check Status Button */}
-          <button 
-            onClick={() => {/* Add logic to check status here */}} 
-            className="w-[100%] flex bg-[#0098ff] hover:bg-blue-700 text-white font-bold text-lg rounded-md 
-                        shadow-[0_2px_0_0_#064585]  hover:shadow-[0_4px_0_0_#4c1d95] 
-                        active:translate-y-[2px] active:shadow-none transition-all duration-150 ease-in-out"
+        <div className="flex justify-center mt-2">
+          <button
+            onClick={() => navigate("/formfill")}
+            className="bg-[#0098ff] hover:bg-blue-700 w-[90%] h-[4vh] font-bold text-lg rounded-md text-white shadow-[0_2px_0_0_#064585] hover:shadow-[0_4px_0_0_#4c1d95] active:translate-y-[2px] active:shadow-none transition-all duration-150 ease-in-out"
           >
-            <div className="w-[80%] my-auto">Check Status</div>
-            <img
-            className="w-[30px] h-[30px] my-auto mx-auto" 
-            src={refresh} alt="" />
+            APPLY FOR INCUBATION
           </button>
-
-          {/* Status Display Box */}
-          <div className="flex-1 flex items-center justify-center bg-white text-gray-800 font-medium border border-gray-300 rounded-md px-4">
-            {/* Replace with actual status dynamically */}
-            Status: <span className="ml-2 font-semibold text-green-600">Applied</span>
-          </div>
         </div>
-      </div>
 
-
-      {/*this will be the preview form which the user ahs filled up  */}
-
-            <div className="flex justify-center w-full mt-3">
-        <button
-          onClick={() => navigate("/formpreview")}
-          className="w-[90%] h-[5vh] bg-purple-600 hover:bg-purple-700 text-white font-bold text-lg rounded-md transition 
-                      shadow-[0_4px_0_0_#4c1d95]  hover:shadow-[0_4px_0_0_#4c1d95] 
-          "
-        >
-          Preview Filled Form
-        </button>
-      </div>
-
-
-
-
-{/* a snmall carousel to revilve the imahes present in STPI incubation */}
-              <div className="w-full mt-6 flex justify-center">
-          <div className="relative w-[90%] overflow-hidden rounded-lg shadow-md">
-            <div
-              id="carouselSlides"
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(0%)` }}
+        <div className="flex justify-center w-full mt-3">
+          <div className="flex w-[90%] h-[5vh] gap-4">
+            <button
+              onClick={() => { }}
+              className="w-[100%] flex bg-[#0098ff] hover:bg-blue-700 text-white font-bold text-lg rounded-md shadow-[0_2px_0_0_#064585] hover:shadow-[0_4px_0_0_#4c1d95] active:translate-y-[2px] active:shadow-none transition-all duration-150 ease-in-out"
             >
-              <img src={img1} className="w-full flex-shrink-0 object-cover h-[30vh] " alt="slide 1" />
-              <img src={img2} className="w-full flex-shrink-0 object-cover h-[30vh]" alt="slide 2" />
-              <img src={img3} className="w-full flex-shrink-0 object-cover h-[30vh]" alt="slide 3" />
-              <img src={img4} className="w-full flex-shrink-0 object-cover h-[30vh]" alt="slide 4" />
-              <img src={img5} className="w-full flex-shrink-0 object-cover h-[30vh]" alt="slide 5" />
+              <div className="w-[80%] my-auto">Check Status</div>
+              <img className="w-[30px] h-[30px] my-auto mx-auto" src={refresh} alt="" />
+            </button>
+
+            <div className="flex-1 flex items-center justify-center bg-white text-gray-800 font-medium border border-gray-300 rounded-md px-4">
+              Status: <span className="ml-2 font-semibold text-green-600">Applied</span>
             </div>
           </div>
         </div>
 
+        <div className="flex justify-center w-full mt-3">
+          <button
+            onClick={() => navigate("/formpreview")}
+            className="w-[90%] h-[5vh] bg-purple-600 hover:bg-purple-700 text-white font-bold text-lg rounded-md transition shadow-[0_4px_0_0_#4c1d95] hover:shadow-[0_4px_0_0_#4c1d95]"
+          >
+            Preview Filled Form
+          </button>
+        </div>
 
+        {/* Carousel */}
+        <div className="bg-white">
+        <div className="w-full mt-3 flex justify-center py-4">
+          <div className="relative w-[90%] overflow-hidden rounded-lg shadow-md">
+            <div
+              id="carouselSlides"
+              className="flex transition-transform duration-700 ease-in-out h-[50%]"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {[img1, img2, img3, img4, img5].map((img, index) => (
+                <div key={index} className="relative w-full flex-shrink-0 h-[30vh]">
+                  <img src={img} className="w-full object-cover h-full" alt={`slide ${index + 1}`} />
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center p-2 text-sm">
+                    Slide {index + 1}: This is a glimpse of STPI Incubation
+                  </div>
+                </div>
+              ))}
+            </div>
 
+            {/* Dots */}
+            <div className="absolute bottom-7 left-1/2 transform -translate-x-1/2 flex gap-2">
+              {[...Array(5)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`w-3 h-3 rounded-full ${currentIndex === i ? "bg-white" : "bg-gray-400"} transition-all duration-300`}
+                ></button>
+              ))}
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
-      {/* Notice and Notification Section */}
-      <div className="  bg-black/20 backdrop-blur-lg border border-black/30  rounded-xl shadow-lg p-6
-                        w-[100%] h-auooto m-5">
+
+      {/* Notifications Section */}
+      <div className="bg-black/20 backdrop-blur-lg border border-black/30 rounded-xl shadow-lg p-6 w-[100%] h-auto m-5">
         <div className="bg-blue-500">
-             <h2 className="text-lg font-semibold mb-2 text-center text-white">NOTIFICATIONS</h2>
+          <h2 className="text-lg font-semibold mb-2 text-center text-white">NOTIFICATIONS</h2>
         </div>
         <p>Here you’ll see notices and notifications.</p>
       </div>
