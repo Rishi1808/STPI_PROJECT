@@ -234,6 +234,8 @@ const UserFormsTable = () => {
                 <th className="py-3 px-6 text-left">Application ID</th>
                 <th className="py-3 px-6 text-left">Unit Name</th>
                 <th className="py-3 px-6 text-center">Actions</th>
+                <th className="py-3 px-6 text-center">Status</th>
+                <th className="py-3 px-6 text-center">Message</th>
               </tr>
             </thead>
             <tbody className="text-gray-700 text-sm">
@@ -249,14 +251,16 @@ const UserFormsTable = () => {
                         >
                           REFRESH
                         </button>
-                        <span className="text-sm text-gray-700">
-                          {form.applicationStatus ? `Status: ${form.applicationStatus}` : "Status: Pending"}
-                        </span>
+                       
                         {/* Displaying the rejection message */}
                       </div>
                     </td>
-
-                  <td>
+                  <td className="text-center">
+                  <span className="text-sm text-gray-700">
+                          {form.applicationStatus ? `Status: ${form.applicationStatus}` : "Status: Pending"}
+                        </span>
+                  </td>
+                  <td className="text-center">
                   {form.rejectionMessage ? `Message: ${form.rejectionMessage}` : "message: no Message"}
                   </td>
                 </tr>
