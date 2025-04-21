@@ -178,6 +178,27 @@ const getFormStatus = async (req, res) => {
   }
 };
 
+const getApplicationsByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required in query parameters" });
+    }
+
+    const applications = await Form.find({ email: email });
+
+    if (applications.length === 0) {
+      return res.status(404).json({ message: "No applications found for this email" });
+    }
+
+    res.status(200).json({ count: applications.length, applications });
+  } catch (error) {
+    console.error("Error fetching applications by email:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
-module.exports = { submitForm, getAllForm, getFormByNumber, updateFormStatus,getFormStatus };
+
+module.exports = { submitForm, getAllForm, getFormByNumber, updateFormStatus,getFormStatus ,getApplicationsByEmail};
