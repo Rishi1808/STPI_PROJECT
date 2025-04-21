@@ -10,5 +10,5 @@ const {getFormStatus} = require("../controller/formController.js");
 router.post('/signup',signup);
 router.post('/login',login);
 router.get("/applications",authMiddleware, getApplicationsByEmail);
-router.get("/getStatus",authMiddleware,getFormStatus)
+router.get("/getStatus/:formNumber",authMiddleware,getFormStatus)
 module.exports=router;

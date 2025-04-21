@@ -124,37 +124,51 @@ const getFormByNumber = async (req, res) => {
 
  // Update with your actual model path
 
-const updateFormStatus = async (req, res) => {
+ const updateFormStatus = async (req, res) => {
   try {
     const { applicationId } = req.params;
-    const { status, message } = req.body; // Assume status is "Accepted" or "Rejected", and message is optional
+    const { status, message } = req.body;
 
-    // Find the form by applicationId
+    console.log("🟡 Incoming Data:", { applicationId, status, message });
+
+    // Validate status
+    const allowedStatuses = ["Accepted", "Rejected"];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    // Find the form
     const form = await Form.findOne({ applicationId });
 
     if (!form) {
+      console.log("🔴 Form not found for applicationId:", applicationId);
       return res.status(404).json({ message: "Form not found" });
     }
 
-    // Update the form's status and message
-    form.status = status;
+    // Update form
+    form.applicationStatus = status;
     form.adminMessage = message || "No message provided";
 
-    // Save the updated form
     await form.save();
+
+    console.log("✅ Form updated successfully:", {
+      applicationStatus: form.applicationStatus,
+      adminMessage: form.adminMessage,
+    });
 
     return res.json({
       message: `Form status updated to ${status}`,
       form: {
-        status: form.status,
+        applicationStatus: form.applicationStatus,
         adminMessage: form.adminMessage,
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("❌ Server error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const getFormStatus = async (req, res) => {
   try {
@@ -169,7 +183,7 @@ const getFormStatus = async (req, res) => {
 
     // Return the status and any relevant message
     return res.json({
-      status: form.status,
+      status: form.applicationStatus,
       message: form.adminMessage || "No message provided",
     });
   } catch (error) {
