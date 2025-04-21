@@ -194,19 +194,19 @@ const getFormStatus = async (req, res) => {
 
 const getApplicationsByEmail = async (req, res) => {
   try {
-    const { email } = req.query;
+    const { email } = req.query; // ✅ use query instead of body
 
     if (!email) {
       return res.status(400).json({ message: "Email is required in query parameters" });
     }
 
-    const applications = await Form.find({ email: email });
+    const applications = await Form.find({ email });
 
     if (applications.length === 0) {
       return res.status(404).json({ message: "No applications found for this email" });
     }
 
-    res.status(200).json({ count: applications.length, applications });
+    res.status(200).json({ success: true, count: applications.length, data: applications });
   } catch (error) {
     console.error("Error fetching applications by email:", error);
     res.status(500).json({ message: "Server error" });
