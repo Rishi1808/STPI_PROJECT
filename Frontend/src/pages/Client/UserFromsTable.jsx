@@ -1,10 +1,11 @@
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
-// import { data } from "react-router-dom";
 
 const UserFormsTable = () => {
   const [forms, setForms] = useState([]);
-  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // ✅ useContext added
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,61 +28,15 @@ const UserFormsTable = () => {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, [user?.email]);
+  }, [user?.email]); // ✅ Depend on email so effect runs when it's ready
 
-  // const getStatus = async (applicationId) => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const res = await fetch(`http://localhost:5000/api/auth/getStatus/${applicationId}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     const data = await res.json();
-  // console.log(data)
-  //     if (data.success) {
-  //       setForms((prevForms) =>
-  //         prevForms.map((form) =>
-  //           form.applicationId === applicationId
-  //             ? { ...form, applicationStatus: res.status }
-  //             : form
-  //         )
-  //       );
-  //     } else {
-  //       console.error("Failed to get status:", data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Status fetch error:", error);
-  //   }
-  // };
-
-  const getStatus = async (applicationId) => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/auth/getStatus/${applicationId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      const data = await res.json();
-  
-      if (data.status) {
-        setForms((prevForms) =>
-          prevForms.map((form) =>
-            form.applicationId === applicationId
-              ? { ...form, applicationStatus: data.status }
-              : form
-          )
-        );
-      } else {
-        console.error("Failed to get status:", data.message);
-      }
-    } catch (error) {
-      console.error("Status fetch error:", error);
-    }
+  const getStatus = (applicationId) => {
+    console.log(applicationId);
+    navigate(`/form-preview/${applicationId}`);
   };
+
+  
+
   return (
     <div className="container mx-auto mt-10 p-6">
       <div className="overflow-x-auto">
@@ -100,23 +55,12 @@ const UserFormsTable = () => {
                   <td className="py-3 px-6">{form.applicationId}</td>
                   <td className="py-3 px-6">{form.unitName}</td>
                   <td className="py-3 px-6 text-center">
-                    <div className="flex flex-col items-center gap-2">
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                        onClick={() => getStatus(form.applicationId)}
-                      >
-                        REFRESH 
-                      </button>
-                      <span className="text-sm text-gray-700">
-                        {form.applicationStatus ? `Status: ${form.applicationStatus}` : "Status: Pending"}
-                      </span>
-
-                      
-                    </div>
-                  </td>
-
-                  <td>
-                  {form.rejectionMessage ? `Status: ${form.rejectionMessage}` : "message: no Message"}
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                      onClick={() => getStatus(form.applicationId)}
+                    >
+                      View Form
+                    </button>
                   </td>
                 </tr>
               ))}
