@@ -184,7 +184,7 @@ const getFormStatus = async (req, res) => {
     // Return the status and any relevant message
     return res.json({
       status: form.applicationStatus,
-      message: form.rejectionMessage || "No message provided",
+      message: form.adminMessage || "No message provided",
     });
   } catch (error) {
     console.error(error);
