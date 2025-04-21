@@ -101,16 +101,11 @@ const ClientDashboard = () => {
         <div className="flex justify-center w-full mt-3">
           <div className="flex w-[90%] h-[5vh] gap-4">
             <button
-              onClick={() => { }}
+              onClick={() => {navigate("/status") }}
               className="w-[100%] flex bg-[#0098ff] hover:bg-blue-700 text-white font-bold text-lg rounded-md shadow-[0_2px_0_0_#064585] hover:shadow-[0_4px_0_0_#4c1d95] active:translate-y-[2px] active:shadow-none transition-all duration-150 ease-in-out"
             >
               <div className="w-[80%] my-auto">Check Status</div>
-              <img className="w-[30px] h-[30px] my-auto mx-auto" src={refresh} alt="" />
             </button>
-
-            <div className="flex-1 flex items-center justify-center bg-white text-gray-800 font-medium border border-gray-300 rounded-md px-4">
-              Status: <span className="ml-2 font-semibold text-green-600">Applied</span>
-            </div>
           </div>
         </div>
 

@@ -3,8 +3,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { validationSchema } from "../schemas/Validation";
+import { useContext,useEffect } from "react";
+import { AuthContext  } from "../context/AuthContext";
+
 
 const IncubationForm = () => {
+  const { user } = useContext(AuthContext);
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(validationSchema)
   });
@@ -48,6 +52,8 @@ const IncubationForm = () => {
       setLoading(true);
       const formDataObj = new FormData();
       console.log("Form Data:", formData);
+      alert("FORM SUBMITTED SUCCESSFULLY");
+      reset(); // This clears the form
       // Append all form fields
       Object.keys(formData).forEach((key) => {
         // Skip file fields as we handle them separately
@@ -344,9 +350,15 @@ const IncubationForm = () => {
             <input type="text" {...register("phone")} className="w-full border p-2 rounded" />
             {errors.phone && <span className="text-red-500">{errors.phone?.message}</span>}
           </div>
+
+
+
           <div className="w-1/2">
             <label className="block font-medium">Email</label>
-            <input type="email" {...register("email")} className="w-full border p-2 rounded" />
+            <input type="email" {...register("email")} className="w-full border p-2 rounded" 
+            value={user?.email || "" }
+            readOnly // optional: prevents editing
+            />
             {errors.email && <span className="text-red-500">{errors.email?.message}</span>}
           </div>
         </div>

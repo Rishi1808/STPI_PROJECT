@@ -194,7 +194,7 @@ const getFormStatus = async (req, res) => {
 
 const getApplicationsByEmail = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email } = req.query;
 
     if (!email) {
       return res.status(400).json({ message: "Email is required in query parameters" });

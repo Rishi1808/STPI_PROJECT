@@ -10,6 +10,7 @@ import Footer from "./components/Footer/Footer";
 import PreviewForm from "./pages/admin/PreviewForm"; 
 import Landingpage from "./pages/admin/Landingpage";
 import ClientDashboard from "./pages/Client/clientDashboard";
+import UserFormsTable from "./pages/Client/UserFromsTable";
 
 const App = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         {/* <Route path="/list" element={<Fromlist />} /> */}
+        <Route path="/status" element={<UserFormsTable/>} />
         <Route path="/adminGet" element={<Landingpage/>} />
         <Route path="/form-preview/:formNumber" element={<PreviewForm />} />
       </Routes>
