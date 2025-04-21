@@ -147,20 +147,20 @@ const getFormByNumber = async (req, res) => {
 
     // Update form
     form.applicationStatus = status;
-    form.adminMessage = message || "No message provided";
+    form.rejectionMessage = message || "No message provided";
 
     await form.save();
 
     console.log("✅ Form updated successfully:", {
       applicationStatus: form.applicationStatus,
-      adminMessage: form.adminMessage,
+      adminMessage: form.rejectionMessage,
     });
 
     return res.json({
       message: `Form status updated to ${status}`,
       form: {
         applicationStatus: form.applicationStatus,
-        adminMessage: form.adminMessage,
+        adminMessage: form.rejectionMessage,
       },
     });
   } catch (error) {
@@ -184,7 +184,7 @@ const getFormStatus = async (req, res) => {
     // Return the status and any relevant message
     return res.json({
       status: form.applicationStatus,
-      message: form.adminMessage || "No message provided",
+      message: form.rejectionMessage || "No message provided",
     });
   } catch (error) {
     console.error(error);
