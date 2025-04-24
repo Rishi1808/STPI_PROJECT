@@ -6,9 +6,8 @@ const formSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true
-  }, 
+  },
   unitName: {
-   // Unique Application ID
     type: String,
     required: [true, 'Unit name is required']
   },
@@ -151,23 +150,31 @@ const formSchema = new mongoose.Schema({
     authLetter: {
       url: String,
       publicId: String,
-      originalName: String
+      originalName: String,
+      s3Bucket: String,  // Optional: to store the bucket name
+      s3Region: String   // Optional: to store the region where file is stored
     },
     rocCertificate: {
       url: String,
       publicId: String,
-      originalName: String
+      originalName: String,
+      s3Bucket: String,
+      s3Region: String
     },
     casteCertificate: {
       url: String,
       publicId: String,
-      originalName: String
+      originalName: String,
+      s3Bucket: String,
+      s3Region: String
     },
     passportPhotos: [
       {
         url: String,
         publicId: String,
-        originalName: String
+        originalName: String,
+        s3Bucket: String,
+        s3Region: String
       }
     ]
   },
@@ -180,7 +187,7 @@ const formSchema = new mongoose.Schema({
 
   // Admin comments
   adminComments: String,
-  
+
   // 🔴 New field
   rejectionMessage: {
     type: String,
@@ -203,27 +210,3 @@ const formSchema = new mongoose.Schema({
 const Form = mongoose.model("Form", formSchema);
 
 module.exports = Form;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

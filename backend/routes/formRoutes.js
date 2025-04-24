@@ -1,13 +1,13 @@
 // routes/formRoutes.js
-const express = require("express");
-const { submitForm, getFormStatus } = require("../controller/formController.js");
+const express = require('express');
+const { submitForm, getFormStatus } = require('../controller/formController');
 const router = express.Router();
-const { uploadFields } = require("../middleware/upload.js");  // Import the upload middleware
+const { uploadFields, uploadFilesToS3 } = require('../middleware/upload');
 
 // Route for form submission with multiple file uploads
-router.post("/submit", uploadFields, submitForm);
+router.post('/submit', uploadFields, uploadFilesToS3, submitForm);
 
 // Route to view form by its number (to track the status)
-router.get("/status/:formNumber", getFormStatus);
+router.get('/status/:formNumber', getFormStatus);
 
 module.exports = router;

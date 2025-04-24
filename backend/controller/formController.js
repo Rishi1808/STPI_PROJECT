@@ -1,4 +1,7 @@
 const Form = require("../models/Form");
+const multer = require("multer");
+const AWS = require("aws-sdk");
+const multerS3 = require("multer-s3");
 
 const generateApplicationId = async () => {
   const year = new Date().getFullYear();
@@ -16,37 +19,40 @@ const generateApplicationId = async () => {
 };
 
 // Form submission function
+
 const submitForm = async (req, res) => {
   try {
     const formData = req.body;
     const files = req.files;
-    const applicationId = await generateApplicationId(); // Generate unique ID
+    const applicationId = await generateApplicationId();
 
-    // Initialize uploadedFiles object for file storage
     const uploadedFiles = {};
 
-    // Process uploaded files if they exist
+    // Iterate through each file field
     if (files) {
-      Object.keys(files).forEach((fileType) => {
-        if (fileType === "passportPhotos" && files[fileType].length > 0) {
-          // Handle multiple passport photos
-          uploadedFiles[fileType] = files[fileType].map((photo) => ({
-            url: photo.path,
-            publicId: photo.filename,
-            originalName: photo.originalname,
-          }));
-        } else if (files[fileType] && files[fileType].length > 0) {
-          // Handle single file uploads
-          uploadedFiles[fileType] = {
-            url: files[fileType][0].path,
-            publicId: files[fileType][0].filename,
-            originalName: files[fileType][0].originalname,
-          };
+      for (const fieldName in files) {
+        const fileArray = files[fieldName];
+
+        if (Array.isArray(fileArray)) {
+          if (fieldName === "passportPhotos") {
+            // Multiple files for passportPhotos
+            uploadedFiles[fieldName] = fileArray.map(file => ({
+              url: file.location,
+              publicId: file.key,
+              originalName: file.originalname,
+            }));
+          } else if (fileArray.length > 0) {
+            // Single file uploads — take the first file
+            uploadedFiles[fieldName] = {
+              url: fileArray[0].location,
+              publicId: fileArray[0].key,
+              originalName: fileArray[0].originalname,
+            };
+          }
         }
-      });
+      }
     }
-    console.log("Generated Application ID:", applicationId);
-    // Create new form with data and uploaded files
+
     const newForm = new Form({
       applicationId,
       ...formData,
@@ -54,16 +60,12 @@ const submitForm = async (req, res) => {
       submittedAt: new Date(),
     });
 
-    // Save to database
     const savedForm = await newForm.save();
-    console.log("New Form Data Before Save:", { applicationId, ...formData });
 
-
-    // Send success response
     res.status(201).json({
       success: true,
       message: "Incubation form submitted successfully",
-      applicationId, // Include the generated ID in response
+      applicationId,
       data: savedForm,
     });
   } catch (error) {
@@ -75,6 +77,7 @@ const submitForm = async (req, res) => {
     });
   }
 };
+
 
 
 const getAllForm= async (req, res) => {
