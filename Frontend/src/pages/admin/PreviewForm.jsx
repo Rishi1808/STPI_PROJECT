@@ -4,7 +4,10 @@ import API from "../../api"; // Axios instance with base URL
 import PDFViewer from "../../components/PDFViewer"; // Optional component for viewing PDFs
 import Loading from "../../components/Loader"; // Optional loader component
 import PropTypes from "prop-types";
+import { pdfjs } from 'react-pdf';
 
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 const PreviewForm = () => {
   const { formNumber } = useParams(); // from URL
@@ -111,36 +114,38 @@ const PreviewForm = () => {
         <Field label="Expected Occupancy" value={formatDate(formData.expected_occupancy_date)} />
       </div>
 
-      {/* Preview PDFs if available */}
-      {formData.authLetterFile && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold">Authorization Letter:</h3>
-          <PDFViewer fileUrl={formData.authLetterFile} />
-        </div>
-      )}
 
-      {/* Preview passport photos */}
-      {formData.uploadedFiles?.passportPhotos?.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Passport Photos:</h3>
-          <div className="flex flex-wrap gap-4">
-            {formData.uploadedFiles.passportPhotos.map((photo, index) => (
-              <img key={index} src={photo} alt={`Passport ${index + 1}`} className="h-32 rounded shadow" />
-            ))}
-          </div>
-        </div>
-      )}
-      
-       {formData.uploadedFiles?.rocCertificate?.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Passport Photos:</h3>
-          <div className="flex flex-wrap gap-4">
-            {formData.uploadedFiles.rocCertificate.map((photo, index) => (
-              <img key={index} src={photo} alt={`Passport ${index + 1}`} className="h-32 rounded shadow" />
-            ))}
-          </div>
-        </div>
-      )}
+{formData.authLetterFile && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold">Authorization Letter:</h3>
+    <PDFViewer fileUrl={`${formData.authLetterFile}.pdf`} />
+  </div>
+)}
+
+
+{formData.uploadedFiles?.passportPhotos?.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-2">Passport Photos:</h3>
+    <div className="flex flex-wrap gap-4">
+      {formData.uploadedFiles.passportPhotos.map((photo, index) => (
+        <img
+          key={index}
+          src={photo}
+          alt={`Passport ${index + 1}`}
+          className="h-32 rounded shadow"
+        />
+      ))}
+    </div>
+  </div>  
+)}
+
+
+{formData.uploadedFiles?.rocCertificate?.url && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-2">ROC Certificate:</h3>
+    <PDFViewer fileUrl={`${formData.uploadedFiles.rocCertificate.url}.pdf`} />
+  </div>
+)}
 
       {/* Status Update Section */}
       <div className="mt-6">

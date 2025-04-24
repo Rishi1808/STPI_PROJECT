@@ -1,16 +1,8 @@
+// routes/formRoutes.js
 const express = require("express");
-const { submitForm, getFormByNumber } = require("../controller/formController.js");
+const { submitForm, getFormStatus } = require("../controller/formController.js");
 const router = express.Router();
-const upload = require('../middleware/multerConfig.js');
-const { getFormStatus } = require("../controller/formController.js");
-
-// Define the fields your form will need to handle
-const uploadFields = upload.fields([
-  { name: 'authLetter', maxCount: 1 },
-  { name: 'rocCertificate', maxCount: 1 },
-  { name: 'casteCertificate', maxCount: 1 },
-  { name: 'passportPhotos', maxCount: 1 }
-]);
+const { uploadFields } = require("../middleware/upload.js");  // Import the upload middleware
 
 // Route for form submission with multiple file uploads
 router.post("/submit", uploadFields, submitForm);
