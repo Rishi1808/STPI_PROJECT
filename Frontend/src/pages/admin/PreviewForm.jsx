@@ -130,6 +130,17 @@ const PreviewForm = () => {
           </div>
         </div>
       )}
+      
+       {formData.uploadedFiles?.rocCertificate?.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">Passport Photos:</h3>
+          <div className="flex flex-wrap gap-4">
+            {formData.uploadedFiles.rocCertificate.map((photo, index) => (
+              <img key={index} src={photo} alt={`Passport ${index + 1}`} className="h-32 rounded shadow" />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Status Update Section */}
       <div className="mt-6">

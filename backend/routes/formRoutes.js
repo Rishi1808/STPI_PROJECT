@@ -9,7 +9,7 @@ const uploadFields = upload.fields([
   { name: 'authLetter', maxCount: 1 },
   { name: 'rocCertificate', maxCount: 1 },
   { name: 'casteCertificate', maxCount: 1 },
-  { name: 'passportPhotos', maxCount: 5 }
+  { name: 'passportPhotos', maxCount: 1 }
 ]);
 
 // Route for form submission with multiple file uploads

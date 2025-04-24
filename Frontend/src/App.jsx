@@ -29,7 +29,7 @@ const App = () => {
         <Route path="/form" element={<ClientDashboard/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        {/* <Route path="/list" element={<Fromlist />} /> */}
+     
         <Route path="/status" element={<UserFormsTable/>} />
         <Route path="/adminGet" element={<Landingpage/>} />
         <Route path="/form-preview/:formNumber" element={<PreviewForm />} />
