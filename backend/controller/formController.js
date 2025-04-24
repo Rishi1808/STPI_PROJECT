@@ -53,26 +53,24 @@ const submitForm = async (req, res) => {
       }
     }
 
-    const newForm = new Form({
+    // Now save the form data along with the uploaded file details
+    const formSubmission = new Form({
       applicationId,
       ...formData,
-      uploadedFiles,
-      submittedAt: new Date(),
+      uploadedFiles, // Store the uploaded files object
     });
 
-    const savedForm = await newForm.save();
+    // Save the form submission to MongoDB
+    await formSubmission.save();
 
-    res.status(201).json({
-      success: true,
-      message: "Incubation form submitted successfully",
-      applicationId,
-      data: savedForm,
+    res.status(200).send({
+      message: "Form submitted successfully",
+      form: formSubmission,
     });
   } catch (error) {
-    console.error("Form submission error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error submitting incubation form",
+    console.error("Error in form submission:", error);
+    res.status(500).send({
+      message: "Error submitting form",
       error: error.message,
     });
   }

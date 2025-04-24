@@ -1,37 +1,28 @@
 // middleware/s3Config.js
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { Upload } = require('@aws-sdk/lib-storage');
-const dotenv = require('dotenv');
+const AWS = require('aws-sdk');
 
-dotenv.config();
-
-// Configure S3 client with AWS credentials
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
+// Load environment variables from .env file
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Fetching from .env
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Fetching from .env
+  region: process.env.AWS_REGION, // Fetching from .env
 });
 
-// Define S3 Upload logic
 const uploadFile = async (file) => {
-  try {
-    const upload = new Upload({
-      client: s3Client,
-      params: {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `uploads/${file.fieldname}/${Date.now()}_${file.originalname}`,
-        Body: file.buffer,
-        ACL: 'public-read',
-      },
-    });
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME, // Fetching from .env
+    Key: `uploads/${Date.now()}_${file.originalname}`, // Generate unique file name
+    Body: file.buffer,
+    ContentType: file.mimetype, // Set correct MIME type
+    //'ACL: 'public-read', // Public read access (adjust as needed)
+  };
 
-    const data = await upload.done();  // Wait for upload to complete
-    return data.Location;  // Return the file URL
+  try {
+    const uploadResponse = await s3.upload(params).promise();
+    return uploadResponse.Location; // Return the uploaded file URL
   } catch (error) {
-    console.error('Error uploading file:', error);
-    throw error;  // Rethrow the error for further handling
+    console.error('S3 upload failed:', error);
+    throw new Error('Error uploading file to S3');
   }
 };
 
