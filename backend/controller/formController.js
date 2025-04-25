@@ -217,8 +217,8 @@ const getApplicationsByEmail = async (req, res) => {
 const getFormDocuments = async (req, res) => {
   try {
     const formId = req.params.formId;
-    const form = await Form.findById(formId);
-
+    const form = await Form.findOne({ applicationId: formId });
+    console.log(form);
     if (!form) {
       return res.status(404).send({ message: 'Form not found' });
     }
@@ -240,6 +240,7 @@ const getFormDocuments = async (req, res) => {
 
     res.status(200).send({
       message: 'Presigned URLs fetched successfully',
+      formId: form,
       documents: documentLinks,
     });
 
