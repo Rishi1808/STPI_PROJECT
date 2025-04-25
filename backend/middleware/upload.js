@@ -39,11 +39,12 @@ const uploadFilesToS3 = async (req, res, next) => {
 
         // Upload the file to S3 and get file info
         const uploadedFileInfo = await uploadFile(file);  // Upload and get the file info
-
+           console.log('Uploaded file info:', uploadedFileInfo);  // Log the uploaded file info
         // Store file info in an array
         fileDetails.push({
           key: uploadedFileInfo.key,
           originalName: uploadedFileInfo.originalName,
+          url: uploadedFileInfo.url,  // URL of the uploaded file
         });
       }
 
@@ -53,6 +54,7 @@ const uploadFilesToS3 = async (req, res, next) => {
 
     // Attach the uploaded files info to the request object
     req.uploadedFiles = uploadedFiles;
+    console.log('Uploaded files:', req.uploadedFiles);  // Log the uploaded files info
     next();
   } catch (error) {
     console.error('Error uploading files to S3:', error);

@@ -11,7 +11,7 @@ const s3 = new AWS.S3({
 const uploadFile = async (file) => {
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${Date.now()}_${file.originalname}`,
+    Key: `uploads/${Date.now()}_${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
   };
@@ -19,10 +19,10 @@ const uploadFile = async (file) => {
   try {
     const uploadResponse = await s3.upload(params).promise();
     console.log('File uploaded successfully:', uploadResponse);
-
     return {
       key: uploadResponse.Key,        // S3 object key (for later access)
-      originalName: file.originalname // Original file name for display
+      originalName: file.originalname ,
+      url:uploadResponse.Location// Original file name for display
     };
 
   } catch (error) {
@@ -36,7 +36,7 @@ const getPresignedUrl = async (key) => {
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: key,
-    Expires: 60 * 1000000// URL valid for 5 minutes
+    Expires: 60 * 5 // URL valid for 5 minutes
   };
 
   try {
