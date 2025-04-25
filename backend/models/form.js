@@ -147,32 +147,25 @@ const formSchema = new mongoose.Schema({
 
   // File Uploads - Enhanced for Cloudinary integration
   uploadedFiles: {
-    authLetter: {
+    authLetter:[ {
       url: String,
       publicId: String,
       originalName: String,
      
-    },
-    rocCertificate: {
+    }],
+    rocCertificate:[ {
       url: String,
       publicId: String,
       originalName: String,
       
-    },
-    casteCertificate: {
+    }],
+    casteCertificate:[ {
       url: String,
       publicId: String,
       originalName: String,
       
-    },
-    passportPhotos: [
-      {
-        url: String,
-        publicId: String,
-        originalName: String,
-       
-      }
-    ]
+    }]
+    
   },
 
   // Application Status
