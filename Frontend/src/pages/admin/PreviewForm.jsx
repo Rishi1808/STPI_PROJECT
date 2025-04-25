@@ -45,8 +45,13 @@ const PreviewForm = () => {
         });
 
         setFormData(res.data.form);
-        setStatus(res.data.form.status); // Set initial status
+        setStatus(res.data.form.status); 
+
         setMessage(res.data.form.adminMessage || ""); // Set initial message if exists
+
+
+
+       
       } catch (err) {
         setError(err.response?.data?.message || "Failed to load form data");
       }
@@ -119,6 +124,19 @@ const PreviewForm = () => {
   <div className="mt-6">
     <h3 className="text-lg font-semibold">Authorization Letter:</h3>
     <PDFViewer fileUrl={`${formData.authLetterFile}.pdf`} />
+  </div>
+)}
+
+{formData?.uploadedFiles?.rocCertificate?.length > 0 && (
+  <div>
+    <h3>ROC Certificates</h3>
+    {formData.uploadedFiles.rocCertificate.map((file) => (
+      <div key={file._id}>
+        <a href={file.url} target="_blank" rel="noopener noreferrer">
+          {file.originalName}
+        </a>
+      </div>
+    ))}
   </div>
 )}
 
