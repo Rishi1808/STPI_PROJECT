@@ -52,7 +52,7 @@ const IncubationForm = () => {
       setLoading(true);
       const formDataObj = new FormData();
       console.log("Form Data:", formData);
-      alert("FORM SUBMITTED SUCCESSFULLY");
+     
       reset(); // This clears the form
       // Append all form fields
       Object.keys(formData).forEach((key) => {
@@ -76,11 +76,7 @@ const IncubationForm = () => {
       }
 
       // Append passport photos
-      if (fileUploads.passportPhotos.length > 0) {
-        fileUploads.passportPhotos.forEach((photo, index) => {
-          formDataObj.append("passportPhotos", photo);
-        });
-      }
+      
 
       const response = await fetch("http://localhost:5000/api/form/submit", {
         method: "POST",
@@ -90,6 +86,7 @@ const IncubationForm = () => {
       const data = await response.json();
       if (response.ok) {
         toast.success("Form submitted successfully!");
+        alert("FORM SUBMITTED SUCCESSFULLY");
         reset(); // Reset form after successful submission
         setFileUploads({
           authLetter: null,

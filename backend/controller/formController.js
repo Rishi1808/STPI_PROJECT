@@ -2,7 +2,7 @@ const Form = require("../models/Form");
 const multer = require("multer");
 const AWS = require("aws-sdk");
 const multerS3 = require("multer-s3");
-
+const { getPresignedUrl } = require('../middleware/s3Config');
 const generateApplicationId = async () => {
   const year = new Date().getFullYear();
 
@@ -23,50 +23,49 @@ const generateApplicationId = async () => {
 const submitForm = async (req, res) => {
   try {
     const formData = req.body;
-    const files = req.files;
+    const files = req.uploadedFiles;
     const applicationId = await generateApplicationId();
 
     const uploadedFiles = {};
 
-    // Iterate through each file field
     if (files) {
       for (const fieldName in files) {
-        const fileArray = files[fieldName];
+        const file = files[fieldName];
 
-        if (Array.isArray(fileArray)) {
-          if (fieldName === "passportPhotos") {
-            // Multiple files for passportPhotos
-            uploadedFiles[fieldName] = fileArray.map(file => ({
-              url: file.location,
-              publicId: file.key,
-              originalName: file.originalname,
-            }));
-          } else if (fileArray.length > 0) {
-            // Single file uploads — take the first file
-            uploadedFiles[fieldName] = {
-              url: fileArray[0].location,
-              publicId: fileArray[0].key,
-              originalName: fileArray[0].originalname,
-            };
-          }
+        // No need to check for array unless field is passportPhotos
+        if (fieldName === "passportPhotos" && Array.isArray(file)) {
+          uploadedFiles[fieldName] = file.map(f => ({
+            
+            publicId: f.key,
+            originalName: f.originalName,
+          }));
+        } else {
+          uploadedFiles[fieldName] = {
+           
+            publicId: file.key,
+            originalName: file.originalName,
+          };
         }
       }
     }
 
-    // Now save the form data along with the uploaded file details
+   
+
+
+    // Save form data and uploaded files to DB
     const formSubmission = new Form({
       applicationId,
       ...formData,
-      uploadedFiles, // Store the uploaded files object
+      uploadedFiles,
     });
 
-    // Save the form submission to MongoDB
     await formSubmission.save();
 
     res.status(200).send({
       message: "Form submitted successfully",
       form: formSubmission,
     });
+
   } catch (error) {
     console.error("Error in form submission:", error);
     res.status(500).send({
@@ -75,6 +74,7 @@ const submitForm = async (req, res) => {
     });
   }
 };
+
 
 
 
@@ -214,6 +214,41 @@ const getApplicationsByEmail = async (req, res) => {
   }
 };
 
+const getFormDocuments = async (req, res) => {
+  try {
+    const formId = req.params.formId;
+    const form = await Form.findById(formId);
+
+    if (!form) {
+      return res.status(404).send({ message: 'Form not found' });
+    }
+
+    const documentLinks = {};
+
+    // Loop over uploaded files and generate presigned URLs
+    const files = form.uploadedFiles;
+
+    for (const fieldName in files) {
+      const file = files[fieldName];
+      const presignedUrl = await getPresignedUrl(file.key);
+
+      documentLinks[fieldName] = {
+        url: presignedUrl,
+        originalName: file.originalName,
+      };
+    }
+
+    res.status(200).send({
+      message: 'Presigned URLs fetched successfully',
+      documents: documentLinks,
+    });
+
+  } catch (error) {
+    console.error('Error fetching document URLs:', error);
+    res.status(500).send({ message: 'Failed to fetch document URLs' });
+  }
+};
 
 
-module.exports = { submitForm, getAllForm, getFormByNumber, updateFormStatus,getFormStatus ,getApplicationsByEmail};
+
+module.exports = { submitForm, getAllForm, getFormByNumber, updateFormStatus,getFormStatus ,getApplicationsByEmail,getFormDocuments };
