@@ -151,30 +151,26 @@ const formSchema = new mongoose.Schema({
       url: String,
       publicId: String,
       originalName: String,
-      s3Bucket: String,  // Optional: to store the bucket name
-      s3Region: String   // Optional: to store the region where file is stored
+     
     },
     rocCertificate: {
       url: String,
       publicId: String,
       originalName: String,
-      s3Bucket: String,
-      s3Region: String
+      
     },
     casteCertificate: {
       url: String,
       publicId: String,
       originalName: String,
-      s3Bucket: String,
-      s3Region: String
+      
     },
     passportPhotos: [
       {
         url: String,
         publicId: String,
         originalName: String,
-        s3Bucket: String,
-        s3Region: String
+       
       }
     ]
   },

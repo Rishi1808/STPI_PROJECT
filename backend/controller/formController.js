@@ -25,45 +25,43 @@ const submitForm = async (req, res) => {
     const formData = req.body;
     const files = req.uploadedFiles;
     const applicationId = await generateApplicationId();
-  
-    // Initialize an empty object to store uploaded file data
+
     const uploadedFiles = {};
 
+    // Ensure the files are correctly processed and assigned to each field in the schema
     if (files) {
       for (const fieldName in files) {
         const file = files[fieldName];
         console.log(`Processing file for field: ${fieldName}`);
-        
-        // Check if the file is valid (if field is an array like passportPhotos)
+
         if (Array.isArray(file)) {
-          // Handle the case where the field is an array (e.g., passportPhotos)
+          // If the field is an array (e.g., passportPhotos)
           uploadedFiles[fieldName] = file.map(singleFile => ({
+            url: singleFile.url,
             publicId: singleFile.key,
             originalName: singleFile.originalName,
-            url: singleFile.url,  // URL of the uploaded file
+            
           }));
         } else {
-          // Handle the case where it's a single file
+          // If the field is a single file
           uploadedFiles[fieldName] = {
+            url: file.url,
             publicId: file.key,
             originalName: file.originalName,
-            url: file.url,  // URL of the uploaded file
+            
           };
         }
       }
-    } else {
-      console.log("No files uploaded.");
     }
 
-    // Debugging: Log the uploaded files
-    console.log("Uploaded files:", uploadedFiles);
+    // Debugging: Check the processed files before saving
+    console.log("Processed uploaded files controller side:", uploadedFiles);
 
     // Save form data and uploaded files to DB
     const formSubmission = new Form({
       applicationId,
       ...formData,
       uploadedFiles,
-      
     });
 
     await formSubmission.save();
@@ -82,6 +80,7 @@ const submitForm = async (req, res) => {
     });
   }
 };
+
 
 
 
