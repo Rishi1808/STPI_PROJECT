@@ -1,4 +1,4 @@
-const Form = require("../models/Form");
+const Form = require("../models/form");
 const multer = require("multer");
 const AWS = require("aws-sdk");
 const multerS3 = require("multer-s3");
