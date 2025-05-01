@@ -131,7 +131,8 @@ const PreviewForm = () => {
   <div>
     <h3>ROC Certificates</h3>
     {formData.uploadedFiles.rocCertificate.map((file) => (
-      <div key={file._id}>
+      <div className="h-2 w-2 bg-blue-500 p-3"
+       key={file._id}>
         <a href={file.url} target="_blank" rel="noopener noreferrer">
           {file.originalName}
         </a>

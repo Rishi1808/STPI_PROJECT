@@ -3,7 +3,7 @@ export default function FromPreview({ formData }) {
       <div>
         <h2>Form Preview</h2>
         <p><strong>Name:</strong> {formData.name}</p>
-        <p>< strong>Email:</> {formData.email}</p>
+        <p><strong>Email:</strong> {formData.email}</p>
          
       </div>
     );
