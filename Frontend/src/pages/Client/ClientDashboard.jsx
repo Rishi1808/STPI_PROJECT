@@ -85,7 +85,7 @@ const ClientDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4 mt-2">
       <div className="max-w-7xl mx-auto bg-">
         <h1 className="text-3xl font-bold  text-gray-100 mb-6 bg-blue-700 py-2 px-9 rounded-md">
           Welcome to Your Incubation Dashboard

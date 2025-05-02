@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { validationSchema } from "../schemas/Validation";
-import { useContext,useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext  } from "../context/AuthContext";
 
 
