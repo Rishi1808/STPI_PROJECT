@@ -37,7 +37,7 @@ const Login = () => {
     <div className="flex justify-center items-center sm:min-h-[70vh] min-h-[30vh] bg-gray-100 p-7">
       <div className="bg-white p-8 w-96 bg-gray-900/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20">
         <div className="h-[10vh] bg-blue-900 flex items-center justify-between px-4 rounded-[5px]">
-          <img src={logo} alt="Logo" className="h-full" />
+          <img src={logo} alt="Logo" className="h-full object-contain scale-110" />
         </div>
 
         {error && <p className="text-red-500 text-center my-4">{error}</p>}
