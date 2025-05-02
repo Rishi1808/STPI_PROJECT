@@ -1,24 +1,46 @@
 import PropTypes from "prop-types";
 import { createGlobalStyle } from "styled-components";
-import logo1 from "/Images/stpilogo-footer.png"
-import logo2 from "/Images/india.gov-logo.png"
-// ✅ Global style to apply white text to all <li> elements
+import { useState } from "react";
+import logo1 from "/Images/stpilogo-footer.png";
+import logo2 from "/Images/india.gov-logo.png";
+import { FaTwitter, FaFacebook, FaLinkedin, FaYoutube, FaChevronDown, FaChevronUp } from "react-icons/fa";
+
+// Global style with improved responsive styling
 const GlobalStyle = createGlobalStyle`
   li {
     color: white;
-    list-style: disc; /* Remove default bullet points */
+    list-style: none;
     font-weight: 500;
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 16px;
   }
+  
+  li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #fdb913;
+  }
+  
   a {
     text-decoration: none;
     color: white;
+    transition: color 0.2s ease;
   }
+  
   a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #fdb913;
+  }
+  
+  .footer-dropdown {
+    overflow: hidden;
+    transition: max-height 0.3s ease;
   }
 `;
 
-// ✅ Data Arrays
+// Data Arrays remain the same
 const About = [
   { id: 1, txt: "About STPI", link: "#" },
   { id: 2, txt: "Objectives of STPI", link: "#" },
@@ -72,16 +94,15 @@ const Media = [
   { id: 9, txt: "STPI Annual Reports", link: "#" }
 ];
 
-// ✅ Footer Component
+// Improved Footer Component with better responsiveness
 const Footer = () => {
   return (
     <>
       <GlobalStyle />
       <div className="bg-gradient-to-b from-[#010a65] to-[#27626e] text-white">
-        <div className="flex flex-col lg:w-[80%] w-[100%] p-5 mx-auto">
-          {/* Grid layout for sections */}
-          <div className="grid lg:grid-cols-5 w-[90%] mx-auto text-left gap-6">
-            {/* ✅ Using the reusable FooterSection component */}
+        <div className="container mx-auto px-14 py-8 md:py-12">
+          {/* Nav links section - responsive grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mb-5 ">
             <FooterSection title="About" items={About} />
             <FooterSection title="Services" items={Services} />
             <FooterSection title="Information" items={Information} />
@@ -89,33 +110,52 @@ const Footer = () => {
             <FooterSection title="Media" items={Media} />
           </div>
 
-          {/* Additional footer content */}
+          {/* Divider */}
+          <div className="border-t border-gray-600 my-6"></div>
 
-          <div className="flex gap-4 w-[90%] mx-auto">
-            <div><img src={logo1} alt="" /></div>
+          {/* Contact & social media section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
+            {/* Logo */}
+            <div className="flex justify-center md:justify-start">
+              <img src={logo1} alt="STPI Logo" className="max-h-16" />
+            </div>
             
-            <div className="flex flex-col ">
-                  <div><h1 className="text-3xl font-bold">Headquaters</h1></div>
-                  <div><p>Software Technology Parks of India, 1st Floor, Plate B, Office Block-1, East Kidwai Nagar, New Delhi-110023</p></div>
+            {/* Address */}
+            <div className="flex flex-col space-y-2 text-center md:text-left">
+              <h2 className="text-xl md:text-2xl font-bold text-[#fdb913]">Headquarters</h2>
+              <p className="text-sm md:text-base">
+                Software Technology Parks of India, 1st Floor, Plate B, Office Block-1, East Kidwai Nagar, New Delhi-110023
+              </p>
             </div>
 
-            <div className="flex flex-col">
-                  <div>CONNECT WITH US</div>
-                  <div  className="grid grid-cols-4">
-                        <div>Twitter</div>
-                        <div>facebook</div>
-                        <div>Linkedin</div>
-                        <div>Youtube</div>
-                  </div>
+            {/* Social media */}
+            <div className="flex flex-col space-y-3 text-center md:text-left">
+              <h2 className="text-lg font-semibold">CONNECT WITH US</h2>
+              <div className="flex justify-center md:justify-start space-x-4">
+                <a href="#" className="hover:text-[#fdb913] transition-colors duration-200">
+                  <FaTwitter size={24} />
+                </a>
+                <a href="#" className="hover:text-[#fdb913] transition-colors duration-200">
+                  <FaFacebook size={24} />
+                </a>
+                <a href="#" className="hover:text-[#fdb913] transition-colors duration-200">
+                  <FaLinkedin size={24} />
+                </a>
+                <a href="#" className="hover:text-[#fdb913] transition-colors duration-200">
+                  <FaYoutube size={24} />
+                </a>
+              </div>
             </div>
-           
-            <div>
-              <img src={logo2} alt="" />
+            
+            {/* Gov logo */}
+            <div className="flex justify-center md:justify-end">
+              <img src={logo2} alt="India.gov Logo" className="max-h-16" />
             </div>
           </div>
 
-          <div className="mt-5 text-center text-sm">
-            <p>© 2024 STPI. All Rights Reserved.</p>
+          {/* Copyright */}
+          <div className="mt-8 text-center">
+            <p className="text-sm">© 2024 STPI. All Rights Reserved.</p>
           </div>
         </div>
       </div>
@@ -123,27 +163,46 @@ const Footer = () => {
   );
 };
 
-// ✅ Reusable Footer Section Component with PropTypes validation
+// Enhanced Footer Section Component with dropdown functionality
 const FooterSection = ({ title, items }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  
   return (
     <div>
-      <h1 className="text-[#fdb913] font-bold text-2xl mb-3">{title}</h1>
-      <ul>
-        {items.map((data) => (
-          <li
-          className="md:text-[18px] "
-          key={data.id}>
-            <a 
-            className=" hover:text-yellow-500"
-            href={data.link}>{data.txt}</a>
-          </li>
-        ))}
-      </ul>
+      {/* Heading with dropdown toggle for mobile */}
+      <div 
+        className="flex items-center justify-between cursor-pointer md:cursor-default" 
+        onClick={toggleDropdown}
+      >
+        <h2 className="text-xl font-bold text-[#fdb913] mb-4 pb-2 border-b border-[#fdb91333] inline-block">
+          {title}
+        </h2>
+        <button className="text-[#fdb913] block md:hidden">
+          {isOpen ? <FaChevronUp size={16} /> : <FaChevronDown size={16} />}
+        </button>
+      </div>
+      
+      {/* Links list - always visible on desktop, toggleable on mobile */}
+      <div 
+        className={`footer-dropdown ${isOpen ? 'max-h-96' : 'max-h-0 md:max-h-96'} md:block`}
+      >
+        <ul className="space-y-2 overflow-hidden">
+          {items.map((data) => (
+            <li key={data.id} className="text-sm md:text-base transition-all duration-200 hover:pl-5">
+              <a href={data.link}>{data.txt}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
 
-// ✅ Add PropTypes validation
+// PropTypes validation
 FooterSection.propTypes = {
   title: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(
