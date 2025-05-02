@@ -90,12 +90,13 @@ const Login = () => {
             </button>
           </div>
         </div>
-        <p className="text-center text-gray-600 mt-4">
+        {selectedRole=="user"?<p className="text-center text-gray-600 mt-4">
           Don’t have an account?{" "}
           <a href="/signup" className="text-blue-500 hover:underline">
             Sign Up
           </a>
-        </p>
+        </p>:""}
+        
         
       </div>
     </div>
