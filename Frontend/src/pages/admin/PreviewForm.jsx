@@ -414,7 +414,7 @@ const PreviewForm = () => {
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+          {/* <div className="flex flex-col sm:flex-row gap-4 mt-6">
             <button
               onClick={() => handleStatusUpdate("Accepted")}
               className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-lg transition flex items-center justify-center gap-2"
@@ -432,7 +432,34 @@ const PreviewForm = () => {
               <XCircle size={20} />
               {loading ? "Processing..." : "Reject Application"}
             </button>
-          </div>
+          </div> */}
+
+{(status.toLowerCase() !== "accepted" && status.toLowerCase() !== "rejected") ? (
+  <div className="flex flex-col sm:flex-row gap-4 mt-6">
+    <button
+      onClick={() => handleStatusUpdate("Accepted")}
+      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-lg transition flex items-center justify-center gap-2"
+      disabled={loading}
+    >
+      <CheckCircle size={20} />
+      {loading ? "Processing..." : "Accept Application"}
+    </button>
+    
+    <button
+      onClick={() => handleStatusUpdate("Rejected")}
+      className="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-3 rounded-lg transition flex items-center justify-center gap-2"
+      disabled={loading}
+    >
+      <XCircle size={20} />
+      {loading ? "Processing..." : "Reject Application"}
+    </button>
+  </div>
+) : (
+  <div className="text-sm text-gray-600 mt-4">
+    This application has been <strong>{status.toLowerCase()}</strong>. No further action is allowed.
+  </div>
+)}
+
         </div>
       )}
     </div>
