@@ -107,10 +107,10 @@ const LandingPage = () => {
             <div className="bg-gray-50 p-4 rounded-md border border-gray-200 w-full">
               <h2 className="text-lg font-semibold mb-3 text-center border-b border-gray-200 pb-2">User Details</h2>
               <div className="space-y-2">
-                <p className="text-gray-700 flex justify-between">
+                {/* <p className="text-gray-700 flex justify-between">
                   <span className="font-medium">Name:</span> 
                   <span>{user?.name || "N/A"}</span>
-                </p>
+                </p> */}
                 <p className="text-gray-700 flex justify-between">
                   <span className="font-medium">Email:</span> 
                   <span className="text-right">{user?.email || "N/A"}</span>
