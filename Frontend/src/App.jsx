@@ -9,7 +9,7 @@ import EncubqationForm from "./components/EncubqationForm";
 import Footer from "./components/Footer/Footer";
 import PreviewForm from "./pages/admin/PreviewForm"; 
 import Landingpage from "./pages/admin/Landingpage";
-import ClientDashboard from "./pages/Client/clientDashboard";
+import ClientDashboard from "./pages/Client/ClientDashboard";
 import UserFormsTable from "./pages/Client/UserFromsTable";
 
 const App = () => {
