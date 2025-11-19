@@ -21,20 +21,9 @@ const ClientDashboard = () => {
     { id: 4, message: "Mentor meeting scheduled for tomorrow", time: "5 hours ago", read: false }
   ]);
   
-  const [locationNames, setLocationNames] = useState({
-    country: "United States",
-    state: "California",
-    district: "San Francisco",
-  });
   
   const [loading, setLoading] = useState(false);
 
-  const applicationData = [
-    { stage: 'Submitted', status: 'complete' },
-    { stage: 'Review', status: 'current' },
-    { stage: 'Interview', status: 'pending' },
-    { stage: 'Decision', status: 'pending' }
-  ];
 
   const recentActivities = [
     { id: 1, action: "Application submitted", date: "2024-11-18", icon: "📝" },
@@ -96,20 +85,23 @@ const ClientDashboard = () => {
                 <p className="text-indigo-600 font-medium mb-4">{user?.role}</p>
 
                 <div className="w-full space-y-3 pt-4 border-t border-gray-200">
-                  <div className="flex items-center text-sm">
+                  <div className="flex items-center text-sm gap-1">
+                    <span className="font-semibold"> Email : </span>
                     <span className="text-gray-700 truncate">{user?.email}</span>
                   </div>
                   
-                  <div className="flex items-center text-sm">
+                  <div className="flex items-center text-sm gap-1">
+
+                    <span className="font-semibold">State : </span>
                     <span className="text-gray-700">
-                      {locationNames.state}, {locationNames.country}
+                      {user.location.state}
+                    </span>
+                    <span className="font-semibold">Country : </span>
+                    <span className="text-gray-700">
+                    {user.location.country}
                     </span>
                   </div>
                 </div>
-
-                <button className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all">
-                  Edit Profile
-                </button>
               </div>
             </div>
 
@@ -151,28 +143,6 @@ const ClientDashboard = () => {
               </div>
             </div>
 
-            {/* Application Progress */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-indigo-100">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">Application Progress</h2>
-              <div className="flex items-center justify-between">
-                {applicationData.map((stage, index) => (
-                  <div key={index} className="flex items-center flex-1">
-                    <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                        stage.status === 'complete' ? 'bg-green-500' :
-                        stage.status === 'current' ? 'bg-blue-500' : 'bg-gray-300'
-                      }`}>
-                        {stage.status === 'complete' ? "✓" : index + 1}
-                      </div>
-                      <span className="mt-2 text-sm font-medium text-gray-700">{stage.stage}</span>
-                    </div>
-                    {index < applicationData.length - 1 && (
-                      <div className="flex-1 h-1 mx-2 bg-gray-300"></div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Recent Activities & Events */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
