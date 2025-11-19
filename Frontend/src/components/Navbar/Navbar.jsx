@@ -140,7 +140,10 @@ export default function Navbar() {
             {user ? (
               <div className="flex flex-col md:flex-row items-center md:space-x-2 lg:space-x-4">
                 <span className="text-white font-semibold text-sm lg:text-base">
-                  {window.innerWidth < 1024 ? `Hi, ${user.name}` : `Welcome, ${user.name}`}
+                  {window.innerWidth < 1024 
+        ? `Hi, ${user.role}` 
+        : `Welcome, ${user.firstName} ${user.lastName}`
+      }
                 </span>
                 <button
                   onClick={handleLogout}
