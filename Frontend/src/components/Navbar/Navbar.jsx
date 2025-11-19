@@ -139,12 +139,9 @@ export default function Navbar() {
 
             {user ? (
               <div className="flex flex-col md:flex-row items-center md:space-x-2 lg:space-x-4">
-                <span className="text-white font-semibold text-sm lg:text-base">
-                  {window.innerWidth < 1024 
-        ? `Hi, ${user.role}` 
-        : `Welcome, ${user.firstName} ${user.lastName}`
-      }
-                </span>
+                    <span className="text-white font-semibold text-sm lg:text-base">
+                    {`Welcome, ${user.firstName} ${user.lastName}`}
+                  </span>
                 <button
                   onClick={handleLogout}
                   className="bg-red-500 hover:bg-red-600 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md transition duration-200 text-sm lg:text-base mt-1 md:mt-0"
