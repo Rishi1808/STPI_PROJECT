@@ -3,73 +3,12 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 // Register controller (SignUp)
-// const signup = async (req, res) => {
-//     try {
-//         // Extract user details from request body
-//         const { firstName, lastName, email, password, role, nationality, country, state, district, dob } = req.body;
-
-//         // Check if user already exists with the same email
-//         const user = await User.findOne({ email });
-//         if (user) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "User already exists with this email",
-//             });
-//         }
-
-//         // Hash the password
-//         const salt = await bcrypt.genSalt(10);
-//         const hashedPassword = await bcrypt.hash(password, salt);
-
-//         // Create a new user with the provided fields
-//         const newUser = new User({
-//             firstName,
-//             lastName,
-//             email,
-//             password: hashedPassword,
-//             role: role || "user", // default role is 'user'
-//             nationality: nationality || "", // default empty string for nationality
-//             location: {
-//                 country,
-//                 state,
-//                 district,
-//             },
-//             dob,
-//         });
-
-//         // Save the new user to the database
-//         await newUser.save();
-
-//         res.status(201).json({
-//             success: true,
-//             message: "User created successfully",
-//         });
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).json({
-//             success: false,
-//             message: "Server error",
-//         });
-//     }
-// };
-
-
 const signup = async (req, res) => {
     try {
-        const {
-            firstName,
-            lastName,
-            email,
-            password,
-            role,
-            nationality,
-            country,
-            state,
-            district,
-            dob
-        } = req.body;
+        // Extract user details from request body
+        const { firstName, lastName, email, password, role, nationality, country, state, district, dob } = req.body;
 
-        // Check if user already exists
+        // Check if user already exists with the same email
         const user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({
@@ -78,63 +17,18 @@ const signup = async (req, res) => {
             });
         }
 
-        // -------------------------
-        // ADMIN SIGNUP (minimal fields)
-        // -------------------------
-        if (role === "admin") {
-            if (!email || !password || !role) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Admin must provide email, password, and role",
-                });
-            }
-
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
-
-            const newAdmin = new User({
-                firstName: "Admin",
-                lastName: "",
-                email,
-                password: hashedPassword,
-                role: "admin",
-                nationality: "",
-                location: {
-                    country: "",
-                    state: "",
-                    district: "",
-                },
-                dob: "",
-            });
-
-            await newAdmin.save();
-
-            return res.status(201).json({
-                success: true,
-                message: "Admin registered successfully",
-            });
-        }
-
-        // -------------------------
-        // NORMAL USER SIGNUP
-        // -------------------------
-        if (!firstName || !lastName || !email || !password || !country || !state || !district || !dob) {
-            return res.status(400).json({
-                success: false,
-                message: "Missing required fields for normal user signup",
-            });
-        }
-
+        // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Create a new user with the provided fields
         const newUser = new User({
             firstName,
             lastName,
             email,
             password: hashedPassword,
-            role: role || "user",
-            nationality: nationality || "",
+            role: role || "user", // default role is 'user'
+            nationality: nationality || "", // default empty string for nationality
             location: {
                 country,
                 state,
@@ -143,11 +37,12 @@ const signup = async (req, res) => {
             dob,
         });
 
+        // Save the new user to the database
         await newUser.save();
 
         res.status(201).json({
             success: true,
-            message: "User registered successfully",
+            message: "User created successfully",
         });
     } catch (err) {
         console.log(err);
@@ -157,6 +52,96 @@ const signup = async (req, res) => {
         });
     }
 };
+
+
+// // below this contain a contoller funnction which can be used for both admin and user signup
+// const signup = async (req, res) => {
+//     try {
+//         const {
+//             firstName,
+//             lastName,
+//             email,
+//             password,
+//             role,
+//             nationality,
+//             country,
+//             state,
+//             district,
+//             dob
+//         } = req.body;
+
+//         // If role is admin → allow minimal fields
+//         if (role === "admin") {
+//             if (!email || !password) {
+//                 return res.status(400).json({
+//                     success: false,
+//                     message: "Email and password required for admin signup"
+//                 });
+//             }
+
+//             const existingAdmin = await User.findOne({ email });
+//             if (existingAdmin) {
+//                 return res.status(400).json({
+//                     success: false,
+//                     message: "Admin already exists"
+//                 });
+//             }
+
+//             const salt = await bcrypt.genSalt(10);
+//             const hashedPassword = await bcrypt.hash(password, salt);
+
+//             const newAdmin = new User({
+//                 email,
+//                 password: hashedPassword,
+//                 role: "admin"
+//             });
+
+//             await newAdmin.save();
+
+//             return res.status(201).json({
+//                 success: true,
+//                 message: "Admin created successfully"
+//             });
+//         }
+
+//         // ======================
+//         // NORMAL USER SIGNUP
+//         // ======================
+
+//         const user = await User.findOne({ email });
+//         if (user) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "User already exists with this email",
+//             });
+//         }
+
+//         const salt = await bcrypt.genSalt(10);
+//         const hashedPassword = await bcrypt.hash(password, salt);
+
+//         const newUser = new User({
+//             firstName,
+//             lastName,
+//             email,
+//             password: hashedPassword,
+//             role: role || "user",
+//             nationality: nationality || "",
+//             location: { country, state, district },
+//             dob,
+//         });
+
+//         await newUser.save();
+
+//         res.status(201).json({
+//             success: true,
+//             message: "User created successfully",
+//         });
+
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({ success: false, message: "Server error" });
+//     }
+// };
 
 
 
